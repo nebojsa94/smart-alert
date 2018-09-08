@@ -207,6 +207,9 @@ export const fetchPastAlerts = () => (dispatch, getState) => {
       alerts = alerts.sort((a, b) => b._created.localeCompare(a._created));
       if (!alerts) return;
       alerts = alerts.map(parseAlert);
-      dispatch(pastAlerts(alerts));
+      const readAlerts = alerts.filter(alert => alert.originalObject.read);
+      const unreadAlerts = alerts.filter(alert => !alert.originalObject.read);
+      dispatch(pastAlerts(readAlerts));
+      dispatch(newAlerts(unreadAlerts));
     });
 };

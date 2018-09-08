@@ -1,10 +1,10 @@
 import { triggerTypeMap } from '../actions/apiActions';
+import hdate from 'human-date';
+
 
 export const prettifyDate = (date) => {
   if (typeof date === 'string') date = new Date(date);
-  // TODO prettify date like '2h ago' or format date & time
-
-  return date.toDateString();
+  return hdate.relativeTime(date);
 };
 
 export const etherscanLink = address => `https://kovan.etherscan.io/address/${address}`;
