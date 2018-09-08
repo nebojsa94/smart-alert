@@ -122,12 +122,38 @@ class AddTrigger extends Component {
               }
               {
                 selectedTrigger === 6 &&
-                <input
-                  name="ipfsHashPosition"
-                  onChange={this.handleInput}
-                  type="number"
-                  placeholder="Position of your ipfsHash parameter"
-                />
+                <div>
+                  <div className="label-wrapper">
+                    <label htmlFor="validateMethod">
+                      Method to validate:
+                    </label>
+                    <select name="validateMethod" onChange={this.handleInput} id="validateMethod">
+                      {
+                        listFunctions(this.props.contractAbi).map(method => (
+                          <option key={method.name} value={method.name}>{method.name}</option>
+                        ))
+                      }
+                    </select>
+                  </div>
+                  <div className="label-wrapper">
+                    <label htmlFor="ipfsHashPosition">
+                      IPFS Hash parameter:
+                    </label>
+                    <select name="ipfsHashPosition" onChange={this.handleInput} id="ipfsHashPosition">
+                      {
+                        this.state.validateMethod &&
+                        listFunctions(this.props.contractAbi)
+                          .filter(method => method.name === this.state.validateMethod).length &&
+                        listFunctions(this.props.contractAbi)
+                          .filter(method => method.name === this.state.validateMethod)[0]
+                          .inputs
+                          .map((inputs, i) => (
+                            <option key={inputs.name} value={i}>{inputs.name}</option>
+                          ))
+                      }
+                    </select>
+                  </div>
+                </div>
               }
               {
                 selectedTrigger === 8 &&

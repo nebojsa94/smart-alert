@@ -33,7 +33,7 @@ class AlertCard extends Component {
 }
 
 AlertCard.propTypes = {
-  alert: PropTypes.shape
+  // alert: PropTypes.shape
 };
 
 const mapStateToProps = (state) => state;

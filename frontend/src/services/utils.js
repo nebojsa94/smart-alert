@@ -83,4 +83,7 @@ export const parseInputOutputs = (inputs, outputs, selectedTrigger, state) => {
   };
 };
 
-export const listFunctions = (abi) => abi.filter(item => item.type === 'function');
+export const listFunctions = (abi) => {
+  if (typeof abi === 'string') abi = JSON.parse(abi);
+  return abi.filter(item => item.type === 'function');
+};
