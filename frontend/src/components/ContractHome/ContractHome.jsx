@@ -5,10 +5,18 @@ import { connect } from 'react-redux';
 
 import './ContractHome.scss'
 import AlertCard from './AlertCard/AlertCard';
+import { fetchTriggers } from '../../actions/apiActions';
 
 class ContractHome extends Component {
   constructor(props) {
     super(props);
+  }
+
+  componentDidMount() {
+    // fetch active triggers
+    this.props.fetchTriggers()
+    // fetch alerts for each trigger
+
   }
 
   render() {
@@ -39,7 +47,9 @@ class ContractHome extends Component {
 }
 
 const mapStateToProps = (state) => state;
-const mapDispatchToProps = (dispatch) => bindActionCreators({}, dispatch);
+const mapDispatchToProps = (dispatch) => bindActionCreators({
+  fetchTriggers,
+}, dispatch);
 
 export default connect(
   mapStateToProps,
