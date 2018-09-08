@@ -16,10 +16,11 @@ class AddTrigger extends Component {
 
   render() {
     return (
-      <div className="modal">
+      <div className="modal add-trigger-modal">
         <div className="container">
           <h2 className="has-subtitle">Add trigger</h2>
           <p className="subtitle">Set up a new trigger for your contract. </p>
+          <h3>Type</h3>
           <div className="trigger-types-wrapper">
             {
               triggerTypes.map((trigger) => (
@@ -33,8 +34,29 @@ class AddTrigger extends Component {
               ))
             }
           </div>
-          <div>
-            <button className="button light" onClick={this.addTrigger}>Add trigger</button>
+
+          <h3>Alert</h3>
+          <div className="alerts-wrapper">
+            <div className="alert-wrapper">
+              <label><input type="checkbox" name="" id="" />Email</label>
+            </div>
+            <div className="alert-wrapper">
+              <label className="disabled">
+                <input type="checkbox" name="" id="" disabled />Slack
+                <span className="locked">Slack integration not set up</span>
+              </label>
+            </div>
+            <div className="alert-wrapper">
+              <label className="disabled">
+                <input type="checkbox" name="" id="" disabled />SMS
+                <span className="locked">SMS integration not set up</span>
+              </label>
+            </div>
+          </div>
+
+          <div className="modal-buttons">
+            <button className="button light" onClick={this.props.closeModal}>Cancel</button>
+            <button className="button" onClick={this.addTrigger}>Add trigger</button>
           </div>
         </div>
       </div>
