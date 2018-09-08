@@ -11,6 +11,8 @@
     box-shadow: 0px 0px 21px rgba(128, 152, 213, 0.145);
     padding: 10px;
     margin: 10px 0;
+    max-height: 250px;
+    overflow: auto;
 
     label {
       display: flex;

@@ -30,28 +30,22 @@ export const triggerTypes = [
     danger: 'red',
   },
   {
-    type: 'CONTRACT_CALLING',
-    name: 'Contracts calling my contract',
-    description: 'Other contracts calling methods on your contract.',
-    danger: 'orange',
-  },
-  {
     type: 'INVALID_CONTRACT_METHOD',
     name: 'Invalid methods being called',
     description: 'Contract is being called with methods that does not exist',
     danger: 'red'
   },
   {
+    type: 'CONTRACT_CALLING',
+    name: 'Contracts calling my contract',
+    description: 'Other contracts calling methods on your contract.',
+    danger: 'orange',
+  },
+  {
     type: 'BLOCK_FILLING',
     name: 'Block filling',
     description: 'A user executed a large amount of transactions / filling blocks in order to block others.',
     danger: 'orange',
-  },
-  {
-    type : 'HIGH_GAS_PRICE',
-    name : 'High gas price',
-    description : 'If gas price is 50% higher alert',
-    danger : 'yellow',
   },
   {
     type : 'VALIDATE_IPFS',
