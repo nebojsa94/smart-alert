@@ -3,7 +3,7 @@ import {
   CONTRACT_ID_REQUEST,
   CONTRACT_ID_ERROR,
 } from './actionTypes';
-import { apiUrl } from '../constants/env';
+import { apiUrl, testApi } from '../constants/env';
 
 export const getContractIdRequest = () => ({
   type: CONTRACT_ID_REQUEST,
@@ -26,5 +26,9 @@ export const getContractIdError = error => ({
 export const getContractId = (name, address, abi, network) => (dispatch, getState) => {
   dispatch(getContractIdRequest());
 
-  return fetch(apiUrl)
+  return fetch(testApi)
+    .then(res => res.json())
+    .then(json => {
+      console.log(json);
+    });
 };
