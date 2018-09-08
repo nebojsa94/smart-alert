@@ -47,8 +47,9 @@ class ContractHome extends Component {
 
         <div className="container">
           <div>
-            <button>+ Add trigger</button>
-            <button onClick={() => this.setModal('active-triggers')}>View triggers</button>
+            <button className="button light">+ Add trigger</button>
+            &nbsp;&nbsp;&nbsp;
+            <button className="button light" onClick={() => this.setModal('active-triggers')}>View triggers</button>
           </div>
           <div>
             <h2>Latest alerts</h2>

@@ -65,7 +65,7 @@ class Home extends React.Component {
       <div className='home-page'>
         <div className="centered-container">
           <div className="title-wrapper">
-            <h1>Smart Alert</h1>
+            <h1>SmartAlert</h1>
             <p>Watchdog for your contracts</p>
           </div>
 

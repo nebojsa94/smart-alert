@@ -30,6 +30,16 @@
   &:active {
     background-color: darken($accent, 5);
   }
+
+
+}
+
+.button.light {
+  background-color: white;
+  border: 1px solid $accent-light;
+  color: #4F4F4F;
+  box-shadow: 0px 0px 21px rgba(128, 152, 213, 0.145);
+  font-weight: normal;
 }
 
 .title-wrapper {
@@ -94,10 +104,11 @@
 .modal {
   position: absolute;
   background-color: rgba(black, .5);
-  top: 60px;
+  top: 0;
   bottom: 0;
   left: 0;
   right: 0;
+  z-index: 10;
   .container {
     max-width: 1000px;
     padding: 20px;

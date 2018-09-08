@@ -28,7 +28,7 @@ class ActiveTriggers extends Component {
             }
           </div>
           <div>
-            <button onClick={this.props.closeModal}>Done</button>
+            <button className="button light" onClick={this.props.closeModal}>Done</button>
           </div>
         </div>
       </div>
