@@ -25,6 +25,7 @@ export const triggerTypes = [
   },
   {
     type: 'HIGH_FAILED_TRANSACTIONS',
+    
     name: 'High number of failed transactions on contract',
     description: 'High number of failed trascation on contract, possibile attack',
     danger: 'red',
@@ -66,10 +67,16 @@ export const triggerTypes = [
     danger : 'yellow',
   },
   {
-    type : 'INPUT CRITERIA',
+    type : 'INPUT_CRITERIA',
     name : 'Input criteria',
     description : 'Is triggered where the contract input is not in the defined regex form',
     danger : 'yellow',
+  },
+  {
+    type : 'METHODLESS_DEPOSIT',
+    name : 'Deposit without method',
+    description : 'Get notified when contract is topped up directly without method',
+    danger : 'red',
   },
 ];
 
