@@ -55,7 +55,8 @@ class AddTrigger extends Component {
           </div>
 
           <div className="modal-buttons">
-            <button className="button light" onClick={this.addTrigger}>Add trigger</button>
+            <button className="button light" onClick={this.props.closeModal}>Cancel</button>
+            <button className="button" onClick={this.addTrigger}>Add trigger</button>
           </div>
         </div>
       </div>

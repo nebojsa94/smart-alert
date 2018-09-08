@@ -2,7 +2,7 @@ import React from 'react';
 import { Link, Redirect } from 'react-router-dom';
 
 import './Home.scss';
-import { getContractId } from '../../actions/contractActions';
+import { getContractId, getContractIdSuccess } from '../../actions/contractActions';
 import { connect } from 'react-redux';
 
 class Home extends React.Component {
@@ -70,17 +70,20 @@ class Home extends React.Component {
           </div>
 
           {
-            contracts.length > 0 &&
-            <div className="saved-contracts">
-              <p>Saved contracts</p>
-              {
-                contracts.map(contract => (
-                  <div key={contract} className="contract">
-                    {contract}
-                  </div>
-                ))
-              }
-            </div>
+            contracts.length > 0 && [
+              <div className="saved-contracts">
+                <h2>Recent contracts</h2>
+                {
+                  contracts.map(contract => (
+                    <div key={contract} className="contract">
+                      <a
+                        onClick={() => this.props.getContractIdSuccess(contract.id, contract.address)}>{contract.address}</a>
+                    </div>
+                  ))
+                }
+              </div>,
+              <h2>Add new contract</h2>
+            ]
           }
 
           <form onSubmit={this.handleFormSubmit} className="form-wrapper">
@@ -93,7 +96,6 @@ class Home extends React.Component {
             </div>
             <div className="form-group">
               <select name="" id="">
-                <option value="" disabled></option>
                 <option value="Kovan">Kovan</option>
               </select>
             </div>
@@ -112,6 +114,7 @@ const mapStateToProps = state => ({
 
 const mapDispatchToProps = {
   getContractId,
+  getContractIdSuccess,
 };
 
 export default connect(
