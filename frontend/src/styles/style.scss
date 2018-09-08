@@ -3,4 +3,11 @@
 // Variables
 @import "variables/colors";
 // Components
-@import "components/comon";
+@import "components/common";
+
+
+.container {
+  max-width: 1200px;
+  margin-left: auto;
+  margin-right: auto;
+}

@@ -1,0 +1,40 @@
+@import '../../../styles/variables/colors';
+
+.alert-card-container {
+  margin: 20px 0;
+  border-radius: 5px;
+  border: 1px solid #eee;
+  box-shadow: 0 2px 4px 1px rgba(black, .1);
+  padding: 10px;
+  display: flex;
+
+  .alert-icon {
+    width: 60px;
+    height: 60px;
+    border-radius: 30px;
+    margin-right: 20px;
+  }
+
+  .meta {
+    flex-grow: 1;
+    h3 {
+
+    }
+
+    .date {
+      float: right;
+    }
+  }
+
+
+
+  &.danger-red {
+    .alert-icon { background-color: $warning-red; }
+  }
+  &.danger-orange {
+    .alert-icon { background-color: $warning-orange; }
+  }
+  &.danger-yellow {
+    .alert-icon { background-color: $warning-yellow; }
+  }
+}
