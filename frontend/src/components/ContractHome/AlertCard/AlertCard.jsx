@@ -16,15 +16,16 @@ class AlertCard extends Component {
     const {
       name = 'Name missing',
       danger = 'red',
-      date = new Date()
+      date = new Date(),
+      txHash = '0x',
     } = this.props.alert;
 
     return (
       <div className={`alert-card-container danger-${danger}`}>
         <div className="alert-icon" />
         <div className="meta">
-          <span className="date">{prettifyDate(date)}</span>
-          <h3>{name}</h3>
+          <h3>{name} <span className="date">{prettifyDate(date)}</span></h3>
+          <p>tx hash: {txHash}</p>
         </div>
       </div>
     );

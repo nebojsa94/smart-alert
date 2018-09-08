@@ -4,3 +4,5 @@ export const prettifyDate = (date) => {
 
   return date.toDateString();
 };
+
+export const etherscanLink = address => `https://kovan.etherscan.io/address/${address}`;

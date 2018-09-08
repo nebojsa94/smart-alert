@@ -1,12 +1,13 @@
 import React, { Component } from 'react';
 import { bindActionCreators } from 'redux';
-import { Redirect } from 'react-router-dom';
+import { Redirect, Link } from 'react-router-dom';
 import { connect } from 'react-redux';
 
 import './ContractHome.scss'
 import AlertCard from './AlertCard/AlertCard';
 import { fetchTriggers } from '../../actions/apiActions';
 import ActiveTriggers from '../ActiveTriggers/ActiveTriggers';
+import { etherscanLink } from '../../services/utils';
 
 class ContractHome extends Component {
   constructor(props) {
@@ -30,12 +31,17 @@ class ContractHome extends Component {
   }
 
   render() {
+    const { contractAddress = '0x' } = this.props;
     return (
       <div className="contract-home-wrapper">
         <div className="nav">
           <div className="container">
-            <a className="logo" href="">SmartAlert</a>
-            <span>contract address</span>
+            <Link className="logo" to="/">SmartAlert</Link>
+            <a
+              className="ct-address"
+              href={etherscanLink(contractAddress)}
+              target="_blank" rel="noopener"
+            >{contractAddress}</a>
           </div>
         </div>
 
@@ -63,7 +69,9 @@ class ContractHome extends Component {
   }
 }
 
-const mapStateToProps = (state) => state;
+const mapStateToProps = (state) => ({
+  contractAddress: state.app.contractAddress,
+});
 const mapDispatchToProps = (dispatch) => bindActionCreators({
   fetchTriggers,
 }, dispatch);

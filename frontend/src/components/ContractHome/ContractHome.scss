@@ -4,9 +4,9 @@
   position: relative;
   z-index: 1;
   .container {
-    padding: 0 20px;
-    line-height: 60px;
-    height: 60px;
+    padding: 0;
+    line-height: 90px;
+    height: 90px;
     color: $accent;
     border-bottom: 1px solid #CED3E6;
     background-color: white;
@@ -15,6 +15,14 @@
 
     .logo {
       font-size: 32px;
+      font-weight: bold;
+      text-decoration: none;
+      color: $accent;
+    }
+
+    .ct-address {
+      font-size: 14px;
+      color: $accent;
       font-weight: bold;
     }
   }
