@@ -73,6 +73,10 @@ class ContractHome extends Component {
           <div>
             <h2>Past alerts</h2>
             {
+              !this.props.pastAlerts.length &&
+              <div className="empty">No past alerts</div>
+            }
+            {
               this.props.pastAlerts.map(alert => (
                 <AlertCard key={alert.originalObject._id} alert={alert} />
               ))
