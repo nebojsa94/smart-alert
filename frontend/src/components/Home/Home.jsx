@@ -2,6 +2,8 @@ import React from 'react';
 import { Link } from 'react-router-dom';
 
 import './Home.scss';
+import { getContractId } from '../../actions/contractActions';
+import { connect } from 'react-redux';
 
 class Home extends React.Component {
   constructor(props) {
@@ -9,7 +11,13 @@ class Home extends React.Component {
 
     this.state = {
       contracts: [],
+      address: '',
+      abi: '',
+      network: 'kovan',
     };
+
+    this.handleFormSubmit = this.handleFormSubmit.bind(this);
+    this.handleInput = this.handleInput.bind(this);
   }
 
   componentDidMount() {
@@ -20,9 +28,27 @@ class Home extends React.Component {
     });
   }
 
+  handleInput(e) {
+    this.setState({
+      [e.target.name]: e.target.value,
+    });
+  }
+
+  handleFormSubmit(e) {
+    e.preventDefault();
+    const {
+      address,
+      abi,
+      network,
+    } = this.state;
+    this.props.getContractId('test', address, abi, network);
+  }
+
   render() {
     const {
       contracts,
+      address,
+      abi,
     } = this.state;
 
     return (
@@ -47,14 +73,14 @@ class Home extends React.Component {
             </div>
           }
 
-          <div className="form-wrapper">
+          <form onSubmit={this.handleFormSubmit} className="form-wrapper">
             <div className="form-group">
               <label htmlFor="">Address</label>
-              <input type="text" />
+              <input value={address} type="text" />
             </div>
             <div className="form-group">
               <label htmlFor="">ABI:</label>
-              <textarea />
+              <textarea value={abi} />
             </div>
             <div className="form-group">
               <label htmlFor="">Network:</label>
@@ -63,12 +89,21 @@ class Home extends React.Component {
                 <option value="Kovan">Kovan</option>
               </select>
             </div>
-            <button type="submit">Get my report</button>
-          </div>
+            <button onClick={this.handleFormSubmit} type="submit">Get my report</button>
+          </form>
         </div>
       </div>
     );
   }
 }
 
-export default Home;
+const mapStateToProps = state => ({});
+
+const mapDispatchToProps = {
+  getContractId,
+};
+
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps
+)(Home);
