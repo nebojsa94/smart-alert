@@ -4,6 +4,7 @@ import { etherscanLink } from '../../services/utils';
 import ContractHome from '../ContractHome/ContractHome';
 
 import './Dashboard.scss';
+import Statistics from '../Statistics/Statistics';
 
 class Dashboard extends Component {
   constructor(props) {
@@ -53,9 +54,7 @@ class Dashboard extends Component {
         }
         {
           activeTab === 'stats' &&
-          <div>
-
-          </div>
+          <Statistics />
         }
       </div>
     );
