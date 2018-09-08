@@ -41,6 +41,8 @@ export default (state = INITIAL_STATE, action) => {
         contractAddress: payload.contractAddress,
         contractAbi: payload.abi,
         isFetchingContract: false,
+        alerts: [],
+        pastAlerts: [],
       };
     }
 

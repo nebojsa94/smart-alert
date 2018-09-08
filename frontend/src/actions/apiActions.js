@@ -203,9 +203,9 @@ export const fetchPastAlerts = () => (dispatch, getState) => {
   fetch(testApi + '/api/contract/' + address + '/alerts')
     .then(res => res.json())
     .then(alerts => {
+      if (!alerts) return;
       console.log(alerts);
       alerts = alerts.sort((a, b) => b._created.localeCompare(a._created));
-      if (!alerts) return;
       alerts = alerts.map(parseAlert);
       const readAlerts = alerts.filter(alert => alert.originalObject.read);
       const unreadAlerts = alerts.filter(alert => !alert.originalObject.read);

@@ -1,12 +1,17 @@
 @import "../../styles/variables/colors";
 
 .home-page {
-  background-color: $bg-color;
+  //background-color: $bg-color;
   padding-bottom: 50px;
   display: flex;
   align-items: center;
   justify-content: center;
   min-height: 100vh;
+
+  hr {
+    margin: 0 -40px;
+    border-color: $accent-light;
+  }
 
   textarea {
     resize: vertical;
@@ -14,9 +19,10 @@
 }
 
 .saved-contracts {
-  margin-bottom: 60px;
-  font-weight: 300;
-  font-size: 14px;
+  form {
+    font-weight: 300;
+    font-size: 14px;
+  }
 
   p {
     margin-bottom: 12px;
@@ -31,13 +37,19 @@
   }
 
   .recent-ct {
+    display: block;
     transition: all .2s;
     cursor: pointer;
-    border-bottom: 1px solid transparent;
     color: $accent;
-    font-weight: bold;
+    //font-weight: bold;
+    padding: 20px;
+    margin: 5px 0;
+    border-radius: 5px;
+    border: 1px solid #eee;
+    box-shadow: 0px 0px 21px rgba(128, 152, 213, 0.145);
     &:hover {
-      border-bottom: 1px solid $accent;
+      color: lighten($accent, 15);
+      box-shadow: 0px 0px 25px rgba(128, 152, 213, 0.3);
     }
   }
 }

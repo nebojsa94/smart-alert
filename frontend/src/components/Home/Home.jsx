@@ -17,6 +17,7 @@ class Home extends React.Component {
       network: 'kovan',
       shouldRedirect: false,
       error: '',
+      showForm: false,
     };
 
     this.handleFormSubmit = this.handleFormSubmit.bind(this);
@@ -80,9 +81,10 @@ class Home extends React.Component {
             <h1>SmartAlert</h1>
             <p>Watchdog for your contracts</p>
           </div>
-
+          <hr />
           {
-            contracts.length > 0 && [
+            contracts.length > 0 &&
+            !this.state.showForm && [
               <div className="saved-contracts" key="1">
                 <h2>Recent contracts</h2>
                 {
@@ -99,33 +101,50 @@ class Home extends React.Component {
                     </div>
                   ))
                 }
+
+                <button className="button light full-width" onClick={() => this.setState({ showForm: true })}>
+                  Add new contract
+                </button>
               </div>,
-              <h2 key="2">Add new contract</h2>
             ]
           }
 
-          <form onSubmit={this.handleFormSubmit} className="form-wrapper">
-            <div className="form-group">
-              <input placeholder="Contract name" name="name"
-                     onChange={this.handleInput} value={name} type="text" />
+          {
+            (this.state.showForm || contracts.length === 0) &&
+            <div>
+              <h2>Add new contract</h2>
+              <form onSubmit={this.handleFormSubmit} className="form-wrapper">
+                <div className="form-group">
+                  <input placeholder="Contract name" name="name"
+                         onChange={this.handleInput} value={name} type="text" />
+                </div>
+                <div className="form-group">
+                  <input placeholder="Enter your contract address" name="address"
+                         onChange={this.handleInput} value={address} type="text" />
+                </div>
+                <div className="form-group">
+                  <textarea placeholder="ABI" name="abi" onChange={this.handleInput} value={abi} />
+                </div>
+                <div className="form-group">
+                  <select name="" id="">
+                    <option value="Kovan">Kovan</option>
+                  </select>
+                </div>
+                <div className="button-wrapper">
+                  { this.state.error }
+                  {
+                    contracts.length > 0 &&
+                    <button className="button light" onClick={() => this.setState({ showForm: false })}>
+                      Cancel
+                    </button>
+                  }
+                  <button className="button" onClick={this.handleFormSubmit} type="submit">
+                    Add Contract
+                  </button>
+                </div>
+              </form>
             </div>
-            <div className="form-group">
-              <input placeholder="Enter your contract address" name="address"
-                     onChange={this.handleInput} value={address} type="text" />
-            </div>
-            <div className="form-group">
-              <textarea placeholder="ABI" name="abi" onChange={this.handleInput} value={abi} />
-            </div>
-            <div className="form-group">
-              <select name="" id="">
-                <option value="Kovan">Kovan</option>
-              </select>
-            </div>
-            <button className="button" onClick={this.handleFormSubmit} type="submit">
-              Add Contract
-            </button>
-            { this.state.error }
-          </form>
+          }
         </div>
       </div>
     );

@@ -1,7 +1,7 @@
 @import "../variables/colors";
 
 .centered-container {
-  width: 500px;
+  width: 800px;
   padding: 30px 40px;
   background-color: #fff;
   box-shadow: 0 0 21px rgba(128, 152, 213, 0.145);
@@ -30,7 +30,6 @@
   &:active {
     background-color: darken($accent, 5);
   }
-
 }
 
 .button.light {
@@ -45,15 +44,23 @@
     box-shadow: 0px 0px 25px rgba(128, 152, 213, 0.3);
   }
 }
+.button.full-width {
+  width: 100%;
+}
+.button-wrapper {
+  text-align: right;
+  button {
+    margin-left: 5px;
+  }
+}
 
 .title-wrapper {
-  margin-bottom: 40px;
+  margin-bottom: 20px;
 
   h1 {
-    font-size: 30px;
+    font-size: 32px;
     color: $accent;
     margin-bottom: 15px;
-    font-family: Arial;
     font-weight: bold;
   }
 
@@ -66,11 +73,6 @@
 }
 
 .form-wrapper {
-
-  button {
-    float: right;
-  }
-
   input, select, textarea {
     font-family: Montserrat, sans-serif;
     font-weight: 300;
@@ -141,7 +143,11 @@
     }
   }
   .modal-buttons {
+    text-align: right;
     margin-top: 20px;
+    button {
+      margin-left: 5px;
+    }
   }
 }
 
