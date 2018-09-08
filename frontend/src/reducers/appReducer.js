@@ -1,13 +1,19 @@
 import {
   CONTRACT_ID_ERROR,
   CONTRACT_ID_REQUEST,
-  CONTRACT_ID_SUCCESS
+  CONTRACT_ID_SUCCESS,
+  ACTIVE_TRIGGERS_FETCHED,
+  STATISTICS_SUCCESS,
+  TRIGGER_ADD_SUCCESS,
 } from '../actions/actionTypes';
 
 const INITIAL_STATE = {
   isFetchingContract: false,
   contractIdError: '',
-  contractId: '',
+  contractId: null,
+  contractAddress: '',
+  activeTriggers: [],
+  statistics: null,
 };
 
 export default (state = INITIAL_STATE, action) => {
@@ -26,6 +32,7 @@ export default (state = INITIAL_STATE, action) => {
       return {
         ...state,
         contractId: payload.contractId,
+        contractAddress: payload.contractAddress,
         isFetchingContract: false,
       };
     }
@@ -35,6 +42,30 @@ export default (state = INITIAL_STATE, action) => {
         ...state,
         contractIdError: payload.error,
         isFetchingContract: false,
+      };
+    }
+
+    case ACTIVE_TRIGGERS_FETCHED: {
+      return {
+        ...state,
+        activeTriggers: payload.triggers,
+      };
+    }
+
+    case TRIGGER_ADD_SUCCESS: {
+      return {
+        ...state,
+        activeTriggers: [
+          ...state.activeTriggers,
+          payload.trigger,
+        ]
+      };
+    }
+
+    case STATISTICS_SUCCESS: {
+      return {
+        ...state,
+        statistics: payload.statistics,
       };
     }
 

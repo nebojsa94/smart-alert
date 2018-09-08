@@ -1,0 +1,53 @@
+@import '../../styles/variables/colors';
+
+.nav {
+  position: relative;
+  z-index: 1;
+  .container {
+    padding: 0;
+    line-height: 90px;
+    height: 90px;
+    color: $accent;
+    border-bottom: 1px solid $accent-light;
+    background-color: white;
+    display: flex;
+    justify-content: space-between;
+
+    .logo-wrapper {
+      display: flex;
+      a {
+        margin-right: 50px;
+      }
+    }
+
+    .logo {
+      font-size: 32px;
+      font-weight: bold;
+      text-decoration: none;
+      color: $accent;
+    }
+
+    .ct-address {
+      font-size: 14px;
+      color: $accent;
+      font-weight: bold;
+    }
+  }
+
+}
+
+.tabs {
+  display: flex;
+
+  .tab {
+    margin-right: 20px;
+    color: $accent-light;
+    font-weight: bold;
+    cursor: pointer;
+
+    &.active {
+      color: $accent;
+      text-decoration: underline;
+    }
+  }
+}

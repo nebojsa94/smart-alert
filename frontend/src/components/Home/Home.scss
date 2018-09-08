@@ -1,5 +1,12 @@
+@import "../../styles/variables/colors";
+
 .home-page {
+  background-color: $bg-color;
   padding-bottom: 50px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 100vh;
 }
 
 .saved-contracts {

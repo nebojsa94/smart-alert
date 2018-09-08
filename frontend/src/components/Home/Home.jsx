@@ -1,8 +1,8 @@
 import React from 'react';
-import { Link } from 'react-router-dom';
+import { Link, Redirect } from 'react-router-dom';
 
 import './Home.scss';
-import { getContractId } from '../../actions/contractActions';
+import { getContractId, getContractIdSuccess } from '../../actions/contractActions';
 import { connect } from 'react-redux';
 
 class Home extends React.Component {
@@ -11,8 +11,8 @@ class Home extends React.Component {
 
     this.state = {
       contracts: [],
-      address: '',
-      abi: '',
+      address: '0xf0417825227c5bdcb39d2d9f44e069be3d0f69c4',
+      abi: '[{"constant":false,"inputs":[{"name":"_number","type":"uint256"}],"name":"set","outputs":[],"payable":false,"stateMutability":"nonpayable","type":"function"},{"constant":true,"inputs":[],"name":"get","outputs":[{"name":"","type":"uint256"}],"payable":false,"stateMutability":"view","type":"function"}]',
       network: 'kovan',
     };
 
@@ -21,7 +21,7 @@ class Home extends React.Component {
   }
 
   componentDidMount() {
-    let contracts = localStorage.getItem('contracts') || [];
+    let contracts = localStorage.getItem('contracts') || '[]';
 
     this.setState({
       contracts: JSON.parse(contracts),
@@ -51,45 +51,56 @@ class Home extends React.Component {
       abi,
     } = this.state;
 
+    const {
+      contractId,
+    } = this.props;
+
+    if (contractId) {
+      return (
+        <Redirect to={`/index/${contractId}`} />
+      );
+    }
+
     return (
       <div className='home-page'>
         <div className="centered-container">
           <div className="title-wrapper">
-            <h1>Smart alert</h1>
+            <h1>SmartAlert</h1>
             <p>Watchdog for your contracts</p>
           </div>
 
           {
-            contracts.length > 0 &&
-            <div className="saved-contracts">
-              <p>Saved contracts</p>
-              {
-                contracts.map(contract => (
-                  <div key={contract} className="contract">
-                    {contract}
-                  </div>
-                ))
-              }
-            </div>
+            contracts.length > 0 && [
+              <div className="saved-contracts">
+                <h2>Recent contracts</h2>
+                {
+                  contracts.map(contract => (
+                    <div key={contract} className="contract">
+                      <a
+                        onClick={() => this.props.getContractIdSuccess(contract.id, contract.address)}>{contract.address}</a>
+                    </div>
+                  ))
+                }
+              </div>,
+              <h2>Add new contract</h2>
+            ]
           }
 
           <form onSubmit={this.handleFormSubmit} className="form-wrapper">
             <div className="form-group">
-              <label htmlFor="">Address</label>
-              <input value={address} type="text" />
+              <input placeholder="Enter your contract address" name="address"
+                     onChange={this.handleInput} value={address} type="text" />
             </div>
             <div className="form-group">
-              <label htmlFor="">ABI:</label>
-              <textarea value={abi} />
+              <textarea placeholder="ABI" name="abi" onChange={this.handleInput} value={abi} />
             </div>
             <div className="form-group">
-              <label htmlFor="">Network:</label>
               <select name="" id="">
-                <option value="" disabled></option>
                 <option value="Kovan">Kovan</option>
               </select>
             </div>
-            <button onClick={this.handleFormSubmit} type="submit">Get my report</button>
+            <button className="button" onClick={this.handleFormSubmit} type="submit">Get my report
+            </button>
           </form>
         </div>
       </div>
@@ -97,10 +108,13 @@ class Home extends React.Component {
   }
 }
 
-const mapStateToProps = state => ({});
+const mapStateToProps = state => ({
+  contractId: state.app.contractId,
+});
 
 const mapDispatchToProps = {
   getContractId,
+  getContractIdSuccess,
 };
 
 export default connect(

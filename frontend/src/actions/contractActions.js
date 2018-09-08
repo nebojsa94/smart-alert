@@ -9,10 +9,11 @@ export const getContractIdRequest = () => ({
   type: CONTRACT_ID_REQUEST,
 });
 
-export const getContractIdSuccess = (contractId) => ({
+export const getContractIdSuccess = (contractId, contractAddress) => ({
   type: CONTRACT_ID_SUCCESS,
   payload: {
     contractId,
+    contractAddress,
   },
 });
 
@@ -23,12 +24,34 @@ export const getContractIdError = error => ({
   },
 });
 
-export const getContractId = (name, address, abi, network) => (dispatch, getState) => {
+const addContractToLS = (address, abi, id) => {
+  let contracts = JSON.parse(localStorage.getItem('contracts') || '[]');
+  contracts.push({ address, abi, id });
+  localStorage.setItem('contracts', JSON.stringify(contracts));
+};
+
+
+export const getContractId = (name, contractAddress, abi, network) => (dispatch, getState) => {
   dispatch(getContractIdRequest());
 
-  return fetch(testApi)
+  return fetch(testApi + '/api/contract', {
+    method: 'POST',
+    headers: {
+      'Accept': 'application/json',
+      'Content-Type': 'application/json'
+    },
+    body: JSON.stringify({
+      "name": "Demo", // Add this to form?
+      "address": contractAddress,
+      abi,
+      network,
+    })
+  })
     .then(res => res.json())
-    .then(json => {
-      console.log(json);
+    .then(contract => {
+      console.log(contract);
+      // dispatch contract.Name too?
+      dispatch(getContractIdSuccess(contract._id, contractAddress));
+      addContractToLS(contractAddress, abi, contract._id)
     });
 };

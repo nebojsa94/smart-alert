@@ -1,53 +1,156 @@
+@import "../variables/colors";
+
 .centered-container {
-  max-width: 320px;
-  margin: 0 auto;
+  width: 500px;
+  padding: 30px 40px;
+  background-color: #fff;
+  box-shadow: 0 0 21px rgba(128, 152, 213, 0.145);
+  border-radius: 4px;
+}
+
+.button {
+  height: 42px;
+  padding: 0 26px;
+  background-color: $accent;
+  border-radius: 2px;
+  font-size: 14px;
   text-align: center;
+  font-weight: bold;
+  font-family: Montserrat, sans-serif;
+  color: #fff;
+  border: 0;
+  cursor: pointer;
+  outline: none;
+  transition: all 0.2s ease;
+
+  &:hover {
+    background-color: lighten($accent, 5);
+  }
+
+  &:active {
+    background-color: darken($accent, 5);
+  }
+
+}
+
+.button.light {
+  background-color: white;
+  border: 1px solid #eee;
+  color: #4F4F4F;
+  box-shadow: 0px 0px 21px rgba(128, 152, 213, 0.145);
+  font-weight: normal;
+
+  &:hover {
+    color: lighten(#4F4F4F, 15);
+    box-shadow: 0px 0px 25px rgba(128, 152, 213, 0.3);
+  }
 }
 
 .title-wrapper {
-  margin-top: 60px;
-  margin-bottom: 80px;
+  margin-bottom: 40px;
 
   h1 {
-    font-size: 52px;
-    margin-bottom: 30px;
+    font-size: 30px;
+    color: $accent;
+    margin-bottom: 15px;
+    font-family: Arial;
+    font-weight: bold;
   }
 
   p {
-    font-size: 18px;
+    font-size: 14px;
+    font-family: Montserrat, sans-serif;
+    font-weight: 300;
+    color: rgba(104, 104, 104, 0.8);
   }
 }
 
 .form-wrapper {
 
   button {
-    height: 30px;
-    background-color: #000;
-    color: #fff;
-    cursor: pointer;
+    float: right;
+  }
+
+  input, select, textarea {
+    font-family: Montserrat, sans-serif;
+    font-weight: 300;
+    width: 100%;
+    box-shadow: none;
+    margin-top: 10px;
+    height: 26px;
+    background-color: #fff;
+    border-radius: 0;
+    border: 0;
+    padding-bottom: 10px;
+    font-size: 14px;
+    border-bottom: 1px solid rgba(161, 173, 205, 0.5);
+    outline: 0;
+  }
+
+  textarea {
+    height: 60px;
   }
 
   .form-group {
     margin-bottom: 55px;
+  }
+}
 
-    input, select {
-      width: 100%;
-      border: 1px solid #000;
-      box-shadow: none;
-      margin-top: 10px;
-      height: 26px;
-      background-color: #fff;
-      border-radius: 0;
+.container {
+  max-width: 1060px;
+  margin-left: auto;
+  margin-right: auto;
+  background-color: white;
+  padding: 30px 0;
+  box-sizing: border-box;
+}
+
+.modal {
+  position: absolute;
+  background-color: rgba(black, .5);
+  top: 0;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  z-index: 10;
+  animation: modal-fade-in .2s;
+  .container {
+    max-width: 1000px;
+    padding: 20px;
+    animation: modal-slide-in .2s;
+    border-radius: 0 0 5px 5px;
+    max-height: calc(100vh - 100px);
+    overflow: auto;
+  }
+  @keyframes modal-slide-in {
+    0% {
+      transform: translateY(-100px);
     }
 
-    textarea {
-      width: 100%;
-      border: 1px solid #000;
-      box-shadow: none;
-      margin-top: 10px;
-      background-color: #fff;
-      border-radius: 0;
-      height: 60px;
+    100% {
+      transform: translateY(0px);
     }
   }
+  @keyframes modal-fade-in {
+    0% {
+      opacity: 0;
+    }
+
+    100% {
+      opacity: 1;
+    }
+  }
+  .modal-buttons {
+    margin-top: 20px;
+  }
+}
+
+.has-subtitle {
+  margin-bottom: 0;
+}
+
+.subtitle {
+  margin-top: .5em;
+  font-size: 14px;
+  color: #AAA;
 }
