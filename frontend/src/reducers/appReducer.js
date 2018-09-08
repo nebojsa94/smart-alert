@@ -3,6 +3,7 @@ import {
   CONTRACT_ID_REQUEST,
   CONTRACT_ID_SUCCESS,
   ACTIVE_TRIGGERS_FETCHED,
+  STATISTICS_SUCCESS,
 } from '../actions/actionTypes';
 
 const INITIAL_STATE = {
@@ -11,6 +12,7 @@ const INITIAL_STATE = {
   contractId: null,
   contractAddress: '',
   activeTriggers: [],
+  statistics: null,
 };
 
 export default (state = INITIAL_STATE, action) => {
@@ -46,7 +48,14 @@ export default (state = INITIAL_STATE, action) => {
       return {
         ...state,
         activeTriggers: payload.triggers,
-      }
+      };
+    }
+
+    case STATISTICS_SUCCESS: {
+      return {
+        ...state,
+        statistics: payload.statistics,
+      };
     }
 
     default:
