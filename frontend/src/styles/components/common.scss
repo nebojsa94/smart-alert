@@ -119,7 +119,7 @@
     padding: 20px;
     animation: modal-slide-in .2s;
     border-radius: 0 0 5px 5px;
-    max-height: calc(100vh - 100px);
+    max-height: calc(100vh - 50px);
     overflow: auto;
   }
   @keyframes modal-slide-in {

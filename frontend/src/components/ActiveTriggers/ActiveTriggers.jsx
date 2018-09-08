@@ -15,22 +15,31 @@ class ActiveTriggers extends Component {
       <div className="modal">
         <div className="container">
           <h2 className="has-subtitle">Active triggers</h2>
-          <p className="subtitle">We're currently monitoring for these triggers. </p>
-          <div>
-            {
-              this.props.activeTriggers.map((trigger) => (
-                <div key={trigger.id} className={`active-trigger-wrapper danger-${trigger.danger}`}>
-                  <h3 title={trigger.type}>{trigger.name}</h3>
-                  {/*<p>{JSON.stringify(trigger)}</p>*/}
-                  {/*{SHOW TRIGGER PARAMS HERE}*/}
-                  <p>
-                    <a onClick={() => console.log('Edit ' + trigger.id)}>Edit</a>
-                    <a onClick={() => console.log('Remove ' + trigger.id)}>Remove</a>
-                  </p>
-                </div>
-              ))
-            }
-          </div>
+          {
+            !this.props.activeTriggers.length &&
+            <p className="empty">
+              No active triggers.
+            </p>
+          }
+          {
+            this.props.activeTriggers.length > 0 &&
+            <div>
+              <p className="subtitle">We're currently monitoring for these triggers. </p>
+              {
+                this.props.activeTriggers.map((trigger) => (
+                  <div key={trigger.id} className={`active-trigger-wrapper danger-${trigger.danger}`}>
+                    <h3 title={trigger.type}>{trigger.name}</h3>
+                    {/*<p>{JSON.stringify(trigger)}</p>*/}
+                    {/*{SHOW TRIGGER PARAMS HERE}*/}
+                    <p>
+                      <a onClick={() => console.log('Edit ' + trigger.id)}>Edit</a>
+                      <a onClick={() => console.log('Remove ' + trigger.id)}>Remove</a>
+                    </p>
+                  </div>
+                ))
+              }
+            </div>
+          }
           <div>
             <button className="button light" onClick={this.props.closeModal}>Done</button>
           </div>

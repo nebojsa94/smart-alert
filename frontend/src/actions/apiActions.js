@@ -101,6 +101,7 @@ export const fetchTriggers = () => async (dispatch, getState) => {
     .then(res => res.json())
     .then(triggers => {
       console.log(triggers);
+      if (!triggers) triggers = [];
       dispatch({
         type: ACTIVE_TRIGGERS_FETCHED,
         payload: { triggers }

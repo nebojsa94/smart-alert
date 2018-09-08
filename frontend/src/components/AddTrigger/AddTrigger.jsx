@@ -78,8 +78,8 @@ class AddTrigger extends Component {
     const customTriggers = [0, 6, 8];
 
     return (
-      <div className="modal add-trigger-modal">
-        <div className="container">
+      <div className="modal add-trigger-modal" onClick={this.props.closeModal}>
+        <div className="container" onClick={(e) => e.stopPropagation()}>
           <h2 className="has-subtitle">Add trigger</h2>
           <p className="subtitle">Set up a new trigger for your contract. </p>
           <h3>Type</h3>
@@ -105,7 +105,7 @@ class AddTrigger extends Component {
             <div className="additional-fields form-wrapper">
               <h3>Additional information</h3>
               {
-                selectedTrigger === 0 &&
+                selectedTrigger === 0 && // Withdraw function
                 <div className="label-wrapper">
                   <label htmlFor="withdrawMethod">
                     Your withdraw function name:
@@ -121,7 +121,7 @@ class AddTrigger extends Component {
 
               }
               {
-                selectedTrigger === 6 &&
+                selectedTrigger === 6 && // IPFS Validation
                 <div>
                   <div className="label-wrapper">
                     <label htmlFor="validateMethod">
@@ -129,7 +129,7 @@ class AddTrigger extends Component {
                     </label>
                     <select name="validateMethod" onChange={this.handleInput} id="validateMethod">
                       {
-                        listFunctions(this.props.contractAbi).map(method => (
+                        listFunctions(this.props.contractAbi, true).map(method => (
                           <option key={method.name} value={method.name}>{method.name}</option>
                         ))
                       }
@@ -142,9 +142,9 @@ class AddTrigger extends Component {
                     <select name="ipfsHashPosition" onChange={this.handleInput} id="ipfsHashPosition">
                       {
                         this.state.validateMethod &&
-                        listFunctions(this.props.contractAbi)
+                        listFunctions(this.props.contractAbi, true)
                           .filter(method => method.name === this.state.validateMethod).length &&
-                        listFunctions(this.props.contractAbi)
+                        listFunctions(this.props.contractAbi, true)
                           .filter(method => method.name === this.state.validateMethod)[0]
                           .inputs
                           .map((inputs, i) => (
@@ -156,7 +156,7 @@ class AddTrigger extends Component {
                 </div>
               }
               {
-                selectedTrigger === 8 &&
+                selectedTrigger === 8 && // Input criteria
                 <div>
                   <div className="label-wrapper">
                     <label htmlFor="validateMethod">
