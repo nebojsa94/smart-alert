@@ -8,7 +8,8 @@ import {
 const INITIAL_STATE = {
   isFetchingContract: false,
   contractIdError: '',
-  contractId: '',
+  contractId: null,
+  contractAddress: '',
   activeTriggers: [],
 };
 
@@ -28,6 +29,7 @@ export default (state = INITIAL_STATE, action) => {
       return {
         ...state,
         contractId: payload.contractId,
+        contractAddress: payload.contractAddress,
         isFetchingContract: false,
       };
     }

@@ -1,5 +1,5 @@
 import React from 'react';
-import { Link } from 'react-router-dom';
+import { Link, Redirect } from 'react-router-dom';
 
 import './Home.scss';
 import { getContractId } from '../../actions/contractActions';
@@ -51,6 +51,16 @@ class Home extends React.Component {
       abi,
     } = this.state;
 
+    const {
+      contractId,
+    } = this.props;
+
+    if (contractId) {
+      return (
+        <Redirect to="/index" />
+      );
+    }
+
     return (
       <div className='home-page'>
         <div className="centered-container">
@@ -75,7 +85,8 @@ class Home extends React.Component {
 
           <form onSubmit={this.handleFormSubmit} className="form-wrapper">
             <div className="form-group">
-              <input placeholder="Enter your contract address" name="address" onChange={this.handleInput} value={address} type="text" />
+              <input placeholder="Enter your contract address" name="address"
+                     onChange={this.handleInput} value={address} type="text" />
             </div>
             <div className="form-group">
               <textarea placeholder="ABI" name="abi" onChange={this.handleInput} value={abi} />
@@ -86,7 +97,8 @@ class Home extends React.Component {
                 <option value="Kovan">Kovan</option>
               </select>
             </div>
-            <button className="button" onClick={this.handleFormSubmit} type="submit">Get my report</button>
+            <button className="button" onClick={this.handleFormSubmit} type="submit">Get my report
+            </button>
           </form>
         </div>
       </div>
@@ -94,7 +106,9 @@ class Home extends React.Component {
   }
 }
 
-const mapStateToProps = state => ({});
+const mapStateToProps = state => ({
+  contractId: state.app.contractId,
+});
 
 const mapDispatchToProps = {
   getContractId,

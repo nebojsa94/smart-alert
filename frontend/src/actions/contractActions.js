@@ -9,10 +9,11 @@ export const getContractIdRequest = () => ({
   type: CONTRACT_ID_REQUEST,
 });
 
-export const getContractIdSuccess = (contractId) => ({
+export const getContractIdSuccess = (contractId, contractAddress) => ({
   type: CONTRACT_ID_SUCCESS,
   payload: {
     contractId,
+    contractAddress,
   },
 });
 
@@ -23,12 +24,13 @@ export const getContractIdError = error => ({
   },
 });
 
-export const getContractId = (name, address, abi, network) => (dispatch, getState) => {
+export const getContractId = (name, contractAddress, abi, network) => (dispatch, getState) => {
   dispatch(getContractIdRequest());
 
   return fetch(testApi)
     .then(res => res.json())
-    .then(json => {
-      console.log(json);
+    .then(contract => {
+      console.log(contract);
+      dispatch(getContractIdSuccess(contract.id, contractAddress));
     });
 };
