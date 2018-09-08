@@ -48,6 +48,10 @@ export const getContractData = (address) => (dispatch) => {
 export const addContractRequest = () => ({
   type: ADD_CONTRACT_REQUEST,
 });
+export const addContractError = (error) => ({
+  type: ADD_CONTRACT_ERROR,
+  payload: { error }
+});
 
 export const addContractSuccess = (contractId, contractAddress) => ({
   type: ADD_CONTRACT_SUCCESS,
@@ -64,41 +68,31 @@ const addContractToLS = (address, abi, id) => {
   localStorage.setItem('contracts', JSON.stringify(contracts));
 };
 
-export const addContract = (name, contractAddress, abi, network) => (dispatch, getState) => {
-  dispatch(addContractRequest());
-
-  return fetch(testApi + '/api/contract', {
-    method: 'POST',
-    headers: {
-      'Accept': 'application/json',
-      'Content-Type': 'application/json'
-    },
-    body: JSON.stringify({
-      'name': 'Demo', // Add this to form?
-      'address': contractAddress,
-      abi,
-      network,
+export const addContract = (name, contractAddress, abi, network) => (dispatch, getState) =>
+  new Promise((resolve, reject) => {
+    dispatch(addContractRequest());
+    fetch(testApi + '/api/contract', {
+      method: 'POST',
+      headers: {
+        'Accept': 'application/json',
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({
+        address: contractAddress,
+        name,
+        abi,
+        network,
+      })
     })
-  })
-    .then(res => res.json())
-    .then(contract => {
-      console.log(contract);
-      // dispatch contract.Name too?
-      dispatch(addContractSuccess());
-      addContractToLS(contractAddress, abi, contract._id);
-    });
-};
-
-export const newAlerts = (alerts) => ({
-  type: NEW_ALERTS,
-  payload: { alerts },
-});
-
-export const pollAlerts = (address) => (dispatch) => {
-  fetch(testApi + '/api/contract/' + address + '/poll')
-    .then(res => res.json())
-    .then(alerts => {
-      console.log(alerts);
-      dispatch(newAlerts(alerts));
-    });
-};
+      .then(res => res.json())
+      .then(contract => {
+        console.log(contract);
+        dispatch(addContractSuccess());
+        addContractToLS(contractAddress, abi, contract._id);
+        resolve(contract);
+      })
+      .catch((err) => {
+        dispatch(addContractError(err.message));
+        reject(err.message);
+      });
+  });

@@ -15,6 +15,7 @@ class Home extends React.Component {
       abi: '[{"constant":false,"inputs":[{"name":"_number","type":"uint256"}],"name":"set","outputs":[],"payable":false,"stateMutability":"nonpayable","type":"function"},{"constant":true,"inputs":[],"name":"get","outputs":[{"name":"","type":"uint256"}],"payable":false,"stateMutability":"view","type":"function"}]',
       network: 'kovan',
       shouldRedirect: false,
+      error: '',
     };
 
     this.handleFormSubmit = this.handleFormSubmit.bind(this);
@@ -37,15 +38,22 @@ class Home extends React.Component {
 
   async handleFormSubmit(e) {
     e.preventDefault();
+    this.setState({ error: '' })
     const {
       address,
       abi,
       network,
     } = this.state;
-    await this.props.addContract('test', address, abi, network);
-    this.setState({
-      shouldRedirect: true,
-    })
+    // Add name to form?
+    try {
+      await this.props.addContract('test', address, abi, network);
+      this.setState({
+        shouldRedirect: true,
+      })
+    } catch (error) {
+      console.log(error);
+      this.setState({ error })
+    }
   }
 
   render() {
@@ -106,8 +114,10 @@ class Home extends React.Component {
                 <option value="Kovan">Kovan</option>
               </select>
             </div>
-            <button className="button" onClick={this.handleFormSubmit} type="submit">Get my report
+            <button className="button" onClick={this.handleFormSubmit} type="submit">
+              Add Contract
             </button>
+            { this.state.error }
           </form>
         </div>
       </div>

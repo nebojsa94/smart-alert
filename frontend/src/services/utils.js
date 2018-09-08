@@ -1,7 +1,10 @@
-export const prettifyDate = (date) => {
-  // TODO prettify date like '2h ago' or format date & time
+import { triggerTypeMap } from '../actions/apiActions';
+import hdate from 'human-date';
 
-  return date.toDateString();
+
+export const prettifyDate = (date) => {
+  if (typeof date === 'string') date = new Date(date);
+  return hdate.relativeTime(date);
 };
 
 export const etherscanLink = address => `https://kovan.etherscan.io/address/${address}`;
@@ -87,3 +90,10 @@ export const listFunctions = (abi, withParams = false) => {
   if (typeof abi === 'string') abi = JSON.parse(abi);
   return abi.filter(item => item.type === 'function' && !item.constant && (withParams ? item.inputs.length : true));
 };
+
+export const parseAlert = (alert) => ({
+  trigger: triggerTypeMap[alert.trigger.type],
+  date: alert.transaction._created,
+  parameters: alert.parameters,
+  originalObject: alert,
+});
