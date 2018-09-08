@@ -27,10 +27,23 @@ export const getContractIdError = error => ({
 export const getContractId = (name, contractAddress, abi, network) => (dispatch, getState) => {
   dispatch(getContractIdRequest());
 
-  return fetch(testApi)
+  return fetch(testApi + '/api/contract', {
+    method: 'POST',
+    headers: {
+      'Accept': 'application/json',
+      'Content-Type': 'application/json'
+    },
+    body: JSON.stringify({
+      "name": "Demo", // Add this to form?
+      "address": contractAddress,
+      abi,
+      network,
+    })
+  })
     .then(res => res.json())
     .then(contract => {
       console.log(contract);
-      dispatch(getContractIdSuccess(contract.id, contractAddress));
+      // dispatch contract.Name too?
+      dispatch(getContractIdSuccess(contract._id, contractAddress));
     });
 };
