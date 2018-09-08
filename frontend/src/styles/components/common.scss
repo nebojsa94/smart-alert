@@ -1,3 +1,5 @@
+@import "../variables/colors";
+
 .centered-container {
   width: 500px;
   padding: 30px 40px;
@@ -9,7 +11,7 @@
 .button {
   height: 42px;
   padding: 0 26px;
-  background-color: #5D38DB;
+  background-color: $accent;
   border-radius: 2px;
   font-size: 14px;
   text-align: center;
@@ -22,11 +24,11 @@
   transition: all 0.3s ease;
 
   &:hover {
-    background-color: lighten(#5D38DB, 5);
+    background-color: lighten($accent, 5);
   }
 
   &:active {
-    background-color: darken(#5D38DB, 5);
+    background-color: darken($accent, 5);
   }
 }
 
@@ -35,7 +37,7 @@
 
   h1 {
     font-size: 30px;
-    color: #5D38DB;
+    color: $accent;
     margin-bottom: 15px;
     font-family: Arial;
     font-weight: bold;

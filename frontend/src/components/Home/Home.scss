@@ -1,5 +1,7 @@
+@import "../../styles/variables/colors";
+
 .home-page {
-  background-color: #F5F6FA;
+  background-color: $bg-color;
   padding-bottom: 50px;
   display: flex;
   align-items: center;
