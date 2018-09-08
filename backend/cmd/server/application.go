@@ -50,7 +50,7 @@ func NewApplication() *Application {
 }
 
 func (app *Application) Start() error {
-	httpPort := 80
+	httpPort := 8080
 
 	handler := cors.AllowAll().Handler(app.Router)
 
