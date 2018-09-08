@@ -3,6 +3,8 @@ import { bindActionCreators } from 'redux';
 import { Redirect } from 'react-router-dom';
 import { connect } from 'react-redux';
 
+import './ActiveTriggers.scss';
+
 class ActiveTriggers extends Component {
   constructor(props) {
     super(props);
@@ -16,13 +18,14 @@ class ActiveTriggers extends Component {
           <div>
             {
               this.props.activeTriggers.map((trigger) => (
-                <div key={trigger.id}>
-                  <h3>{trigger.type}</h3>
-                  <div>{JSON.stringify(trigger)}</div>
-                  <div>
+                <div key={trigger.id} className={`active-trigger-wrapper danger-${trigger.danger}`}>
+                  <h3 title={trigger.type}>{trigger.name}</h3>
+                  {/*<p>{JSON.stringify(trigger)}</p>*/}
+                  {/*{SHOW TRIGGER PARAMS HERE}*/}
+                  <p>
                     <a onClick={() => console.log('Edit ' + trigger.id)}>Edit</a>
                     <a onClick={() => console.log('Remove ' + trigger.id)}>Remove</a>
-                  </div>
+                  </p>
                 </div>
               ))
             }
