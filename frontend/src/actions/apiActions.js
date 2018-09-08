@@ -45,13 +45,25 @@ export const triggerTypes = [
     type : 'HIGH_GAS_PRICE',
     name : 'High gas price',
     description : 'If gas price is 50% higher alert',
-    danger : 'orange',
+    danger : 'yellow',
   },
   {
     type : 'VALIDATE_IPFS',
     name : 'IPFS validation',
     description : 'When expecting a IPFS hash validates if file exists at location and with expected size',
     danger : 'orange',
+  },
+  {
+    type : 'HIGH_GAS_PRICE',
+    name : 'High gas price',
+    description : 'If gas price is 50% higher alert',
+    danger : 'yellow',
+  },
+  {
+    type : 'INPUT CRITERIA',
+    name : 'Input criteria',
+    description : 'Is triggered where the contract input is not in the defined regex form',
+    danger : 'yellow',
   },
 ];
 
