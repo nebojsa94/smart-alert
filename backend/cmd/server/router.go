@@ -18,5 +18,9 @@ func NewRouter(app *Application) *httprouter.Router {
 	router.GET("/api/contract/:id/triggers", base.Do(route.GetAllTrigger(app.TriggerService)))
 	router.GET("/api/contract/:id/trigger/:triggerId", base.Do(route.GetTrigger(app.TriggerService)))
 
+	router.GET("/api/contract/:id/trigger/:triggerId/alerts", base.Do(route.GetAlert(app.AlertService)))
+	router.GET("/api/contract/:id/poll", base.Do(route.GetAllAlert(app.AlertService, true)))
+	router.GET("/api/contract/:id/alerts", base.Do(route.GetAllAlert(app.AlertService, false)))
+
 	return router
 }
