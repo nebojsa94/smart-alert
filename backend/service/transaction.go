@@ -93,7 +93,7 @@ func (s *TransactionService) GetAll(contractAddress string) *[]model.Transaction
 
 func (s *TransactionService) ConvertEthereumTransaction(transaction *ethereum.Transaction, contract *model.Contract) *model.Transaction {
 	decodeInput, _ := hex.DecodeString(transaction.Input[2:])
-	decodedData, err := parseCallData(decodeInput, contract.Abi)
+	decodedData, err := ParseCallData(decodeInput, contract.Abi)
 	if err != nil {
 		fmt.Print("Unable to decode data")
 	}
@@ -126,7 +126,7 @@ func (s *TransactionService) Process(transaction *model.Transaction, contract *m
 	return s.Create(transaction)
 }
 
-func parseCallData(calldata []byte, abidata string) (*model.DecodedCallData, error) {
+func ParseCallData(calldata []byte, abidata string) (*model.DecodedCallData, error) {
 
 	if len(calldata) < 4 {
 		return nil, fmt.Errorf("Invalid ABI-data, incomplete method signature of (%d bytes)", len(calldata))

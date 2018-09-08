@@ -2,10 +2,13 @@ package listener
 
 import (
 	"context"
+	"encoding/hex"
+	"encoding/json"
 	"fmt"
 	"github.com/nebojsa94/smart-alert/backend/ethereum"
 	"github.com/nebojsa94/smart-alert/backend/model"
 	"github.com/nebojsa94/smart-alert/backend/service"
+	"net/http"
 	"os"
 	"os/signal"
 )
@@ -14,14 +17,25 @@ type Listener struct {
 	ContractService    service.ContractService
 	TransactionService service.TransactionService
 	TriggerService     service.TriggerService
+	AlertService       service.AlertService
 }
 
-func NewListener(contractService service.ContractService, transactionService service.TransactionService, triggerService service.TriggerService) *Listener {
+func NewListener(contractService service.ContractService, transactionService service.TransactionService, triggerService service.TriggerService, alertService service.AlertService) *Listener {
 	return &Listener{
 		ContractService:    contractService,
 		TransactionService: transactionService,
 		TriggerService:     triggerService,
+		AlertService:       alertService,
 	}
+}
+
+type IPFSResponse struct {
+	Hash           string
+	NumLinks       int
+	BlockSize      int
+	LinksSize      int
+	DataSize       int
+	CumulativeSize int
 }
 
 func (l *Listener) Listen() {
@@ -75,16 +89,14 @@ func processBlock(l *Listener, client *ethereum.Client, blockNumber int64) {
 	}
 
 	for _, t := range block.Transactions {
-		fmt.Println(t.To)
 		if c, err := l.ContractService.Get(t.To); err == nil {
-			processTransaction(l.TransactionService, l.TriggerService, c, client, t)
+			processTransaction(l.TransactionService, l.TriggerService, l.AlertService, c, client, t)
 		}
 	}
 }
 
-func processTransaction(transactionService service.TransactionService, triggerService service.TriggerService, contract *model.Contract, client *ethereum.Client, t *ethereum.Transaction) {
+func processTransaction(transactionService service.TransactionService, triggerService service.TriggerService, alertService service.AlertService, contract *model.Contract, client *ethereum.Client, t *ethereum.Transaction) {
 	fmt.Println("Processing transaction", t.To)
-	fmt.Printf("Trnasction %s", t.To)
 	receipt, err := client.GetTransactionReceipt(t.Hash)
 	if err != nil {
 		fmt.Println("Failed getting transaction receipt")
@@ -99,14 +111,11 @@ func processTransaction(transactionService service.TransactionService, triggerSe
 	transaction := transactionService.ConvertEthereumTransaction(t, contract)
 	switch receipt.Status.Value() {
 	case 0:
-		fmt.Println("Transaction failed for contract")
 		err := transactionService.Process(transaction, contract, false)
 		if err != nil {
 			fmt.Println(err)
 		}
 	case 1:
-		fmt.Println("Transaction successful for contract")
-
 		err := transactionService.Process(transaction, contract, true)
 		if err != nil {
 			fmt.Println(err)
@@ -117,12 +126,75 @@ func processTransaction(transactionService service.TransactionService, triggerSe
 
 	triggers, _ := triggerService.GetAll(contract.Address)
 
+	decodeInput, _ := hex.DecodeString(t.Input[2:])
+	decodedData, err := service.ParseCallData(decodeInput, contract.Abi)
+	if err != nil {
+		fmt.Print("Unable to decode data")
+	}
+
 	for _, trigger := range *triggers {
 		switch trigger.Type {
 		case model.WithdrawCalled:
+			{
+				if trigger.Method == decodedData.Name {
+					fmt.Println("Withdraw Called")
+				}
+			}
+
+		case model.NonAuthorizedWithdraw:
+			{
+				if trigger.Method == decodedData.Name {
+					fmt.Println("Withdraw Called")
+				}
+			}
+		case model.HighFailedTransactions:
+			{
+
+			}
+		case model.InvalidContractMethod:
+			{
+
+			}
+		case model.ContractCalling:
+			{
+
+			}
+		case model.BlockFilling:
+			{
+
+			}
+		case model.ValidateIpfs:
+			{
+				resp, err := http.Get("https://ipfs.decenter.com/api/v0/object/stat?arg=" + decodedData.Inputs[trigger.InputStrings[0].Position-1].Value.(string))
+				if err != nil {
+					ValidationFailed(alertService, transaction, model.ValidateIpfs, map[string]string{
+						"err": err.Error(),
+					})
+				}
+
+				var ipfsResponse IPFSResponse
+				json.NewDecoder(resp.Body).Decode(&ipfsResponse)
+
+				if ipfsResponse.CumulativeSize > 1000 {
+					ValidationFailed(alertService, transaction, trigger.Id.Hex(), map[string]string{
+						"err":  "File too big",
+						"size": string(ipfsResponse.CumulativeSize),
+					})
+				}
+			}
+		case model.HighGasPrice:
+			{
+
+			}
+		case model.InputCriteria:
 			{
 
 			}
 		}
 	}
+}
+
+func ValidationFailed(service service.AlertService, transaction *model.Transaction, triggerId string, parameters map[string]string) {
+	alert := model.NewAlert(triggerId, transaction.Hash, parameters)
+	service.Create(alert)
 }

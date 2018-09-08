@@ -61,7 +61,7 @@ func (app *Application) Start() error {
 		errCh <- http.ListenAndServe(fmt.Sprintf(":%d", httpPort), handler)
 	}()
 
-	listener := l.NewListener(*app.ContractService, *app.TransactionService, *app.TriggerService)
+	listener := l.NewListener(*app.ContractService, *app.TransactionService, *app.TriggerService, *app.AlertService)
 	listener.Listen()
 
 	return <-errCh
