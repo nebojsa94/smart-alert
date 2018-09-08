@@ -1,34 +1,6 @@
 @import '../../styles/variables/colors';
 
-.nav {
-  position: relative;
-  z-index: 1;
-  .container {
-    padding: 0;
-    line-height: 90px;
-    height: 90px;
-    color: $accent;
-    border-bottom: 1px solid $accent-light;
-    background-color: white;
-    display: flex;
-    justify-content: space-between;
-
-    .logo {
-      font-size: 32px;
-      font-weight: bold;
-      text-decoration: none;
-      color: $accent;
-    }
-
-    .ct-address {
-      font-size: 14px;
-      color: $accent;
-      font-weight: bold;
-    }
-  }
-
-}
-
 h2 {
   margin: 1em 0;
 }
+

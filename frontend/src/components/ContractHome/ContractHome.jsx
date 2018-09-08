@@ -3,23 +3,24 @@ import { bindActionCreators } from 'redux';
 import { Redirect, Link } from 'react-router-dom';
 import { connect } from 'react-redux';
 
-import './ContractHome.scss'
+import './ContractHome.scss';
 import AlertCard from './AlertCard/AlertCard';
 import { fetchTriggers } from '../../actions/apiActions';
 import ActiveTriggers from '../ActiveTriggers/ActiveTriggers';
-import { etherscanLink } from '../../services/utils';
 
 class ContractHome extends Component {
   constructor(props) {
     super(props);
     this.state = {
       showModal: '',
-    }
+    };
+
+    this.setActiveTab = this.setActiveTab.bind(this);
   }
 
   componentDidMount() {
     // fetch active triggers
-    this.props.fetchTriggers()
+    this.props.fetchTriggers();
     // fetch alerts for each trigger
 
   }
@@ -27,29 +28,25 @@ class ContractHome extends Component {
   setModal(modal) {
     this.setState({
       showModal: modal,
-    })
+    });
+  }
+
+  setActiveTab(activeTab) {
+    this.setState({
+      activeTab,
+    });
   }
 
   render() {
-    const { contractAddress = '0x' } = this.props;
     return (
       <div className="contract-home-wrapper">
-        <div className="nav">
-          <div className="container">
-            <Link className="logo" to="/">SmartAlert</Link>
-            <a
-              className="ct-address"
-              href={etherscanLink(contractAddress)}
-              target="_blank" rel="noopener"
-            >{contractAddress}</a>
-          </div>
-        </div>
-
         <div className="container">
           <div>
             <button className="button light">+ Add trigger</button>
             &nbsp;&nbsp;&nbsp;
-            <button className="button light" onClick={() => this.setModal('active-triggers')}>View triggers</button>
+            <button className="button light" onClick={() => this.setModal('active-triggers')}>View
+              triggers
+            </button>
           </div>
           <div>
             <h2>Latest alerts</h2>

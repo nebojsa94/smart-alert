@@ -57,7 +57,7 @@ class Home extends React.Component {
 
     if (contractId) {
       return (
-        <Redirect to="/index" />
+        <Redirect to={`/index/${contractId}`} />
       );
     }
 
