@@ -1,13 +1,15 @@
 import {
   CONTRACT_ID_ERROR,
   CONTRACT_ID_REQUEST,
-  CONTRACT_ID_SUCCESS
+  CONTRACT_ID_SUCCESS,
+  ACTIVE_TRIGGERS_FETCHED,
 } from '../actions/actionTypes';
 
 const INITIAL_STATE = {
   isFetchingContract: false,
   contractIdError: '',
   contractId: '',
+  activeTriggers: [],
 };
 
 export default (state = INITIAL_STATE, action) => {
@@ -36,6 +38,13 @@ export default (state = INITIAL_STATE, action) => {
         contractIdError: payload.error,
         isFetchingContract: false,
       };
+    }
+
+    case ACTIVE_TRIGGERS_FETCHED: {
+      return {
+        ...state,
+        activeTriggers: payload.triggers,
+      }
     }
 
     default:

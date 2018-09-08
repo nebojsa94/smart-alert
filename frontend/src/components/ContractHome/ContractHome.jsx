@@ -6,10 +6,14 @@ import { connect } from 'react-redux';
 import './ContractHome.scss'
 import AlertCard from './AlertCard/AlertCard';
 import { fetchTriggers } from '../../actions/apiActions';
+import ActiveTriggers from '../ActiveTriggers/ActiveTriggers';
 
 class ContractHome extends Component {
   constructor(props) {
     super(props);
+    this.state = {
+      showModal: '',
+    }
   }
 
   componentDidMount() {
@@ -17,6 +21,12 @@ class ContractHome extends Component {
     this.props.fetchTriggers()
     // fetch alerts for each trigger
 
+  }
+
+  setModal(modal) {
+    this.setState({
+      showModal: modal,
+    })
   }
 
   render() {
@@ -30,7 +40,7 @@ class ContractHome extends Component {
         <div className="container">
           <div>
             <button>+ Add trigger</button>
-            <button>View triggers</button>
+            <button onClick={() => this.setModal('active-triggers')}>View triggers</button>
           </div>
           <div>
             <h2>Latest alerts</h2>
@@ -41,6 +51,11 @@ class ContractHome extends Component {
             <AlertCard alert={{}} />
           </div>
         </div>
+
+        {
+          this.state.showModal === 'active-triggers' &&
+          <ActiveTriggers closeModal={() => this.setModal('')} />
+        }
       </div>
     );
   }

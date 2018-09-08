@@ -13,7 +13,7 @@ class Home extends React.Component {
   }
 
   componentDidMount() {
-    let contracts = localStorage.getItem('contracts') || [];
+    let contracts = localStorage.getItem('contracts') || '[]';
 
     this.setState({
       contracts: JSON.parse(contracts),
