@@ -110,7 +110,7 @@
   position: absolute;
   background-color: rgba(black, .5);
   top: 0;
-  bottom: -100px;
+  bottom: 0;
   left: 0;
   right: 0;
   z-index: 10;
@@ -120,6 +120,8 @@
     padding: 20px;
     animation: modal-slide-in .2s;
     border-radius: 0 0 5px 5px;
+    max-height: calc(100vh - 100px);
+    overflow: auto;
   }
   @keyframes modal-slide-in {
     0% {
