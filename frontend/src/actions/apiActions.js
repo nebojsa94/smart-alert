@@ -12,16 +12,46 @@ export const triggerTypes = [
     danger: 'red',
   },
   {
+    type: 'NON_AUTHORIZED_WITHDRAW',
+    name: 'Withdrawal form non authorized address',
+    description: 'Withdrawal called from non expected/authorized address',
+    danger: 'red',
+  },
+  {
+    type: 'HIGH_FAILED_TRANSACTIONS',
+    name: 'High number of failed transactions on contract',
+    description: 'High number of failed trascation on contract, possibile attack',
+    danger: 'red',
+  },
+  {
     type: 'CONTRACT_CALLING',
     name: 'Contracts calling my contract',
     description: 'Other contracts calling methods on your contract.',
     danger: 'orange',
   },
   {
+    type: 'INVALID_CONTRACT_METHOD',
+    name: 'Invalid methods being called',
+    description: 'Contract is being called with methods that does not exist',
+    danger: 'red'
+  },
+  {
     type: 'BLOCK_FILLING',
     name: 'Block filling',
     description: 'A user executed a large amount of transactions / filling blocks in order to block others.',
     danger: 'orange',
+  },
+  {
+    type : 'HIGH_GAS_PRICE',
+    name : 'High gas price',
+    description : 'If gas price is 50% higher alert',
+    danger : 'orange',
+  },
+  {
+    type : 'VALIDATE_IPFS',
+    name : 'IPFS validation',
+    description : 'When expecting a IPFS hash validates if file exists at location and with expected size',
+    danger : 'orange',
   },
 ];
 
