@@ -43,6 +43,9 @@ class Home extends React.Component {
       network,
     } = this.state;
     await this.props.addContract('test', address, abi, network);
+    this.setState({
+      shouldRedirect: true,
+    })
   }
 
   render() {
