@@ -1,7 +1,7 @@
 import {
-  CONTRACT_ID_ERROR,
-  CONTRACT_ID_REQUEST,
-  CONTRACT_ID_SUCCESS,
+  CONTRACT_DATA_ERROR,
+  CONTRACT_DATA_REQUEST,
+  CONTRACT_DATA_SUCCESS,
   ACTIVE_TRIGGERS_FETCHED,
   STATISTICS_SUCCESS,
   TRIGGER_ADD_SUCCESS,
@@ -12,8 +12,7 @@ const INITIAL_STATE = {
   contractIdError: '',
   contractId: null,
   contractAddress: '',
-  // TODO REMOVE
-  contractAbi: [{"constant":false,"inputs":[{"name":"_number","type":"uint256"}],"name":"set","outputs":[],"payable":false,"stateMutability":"nonpayable","type":"function"},{"constant":true,"inputs":[],"name":"get","outputs":[{"name":"","type":"uint256"}],"payable":false,"stateMutability":"view","type":"function"}],
+  contractAbi: [],
   activeTriggers: [],
   statistics: null,
 };
@@ -23,24 +22,23 @@ export default (state = INITIAL_STATE, action) => {
 
   switch (type) {
 
-    case CONTRACT_ID_REQUEST: {
+    case CONTRACT_DATA_REQUEST: {
       return {
         ...state,
         isFetchingContract: true,
       };
     }
 
-    case CONTRACT_ID_SUCCESS: {
+    case CONTRACT_DATA_SUCCESS: {
       return {
         ...state,
-        contractId: payload.contractId,
         contractAddress: payload.contractAddress,
         contractAbi: payload.abi,
         isFetchingContract: false,
       };
     }
 
-    case CONTRACT_ID_ERROR: {
+    case CONTRACT_DATA_ERROR: {
       return {
         ...state,
         contractIdError: payload.error,

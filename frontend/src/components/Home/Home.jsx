@@ -2,7 +2,7 @@ import React from 'react';
 import { Link, Redirect } from 'react-router-dom';
 
 import './Home.scss';
-import { getContractId, getContractIdSuccess } from '../../actions/contractActions';
+import { addContract } from '../../actions/contractActions';
 import { connect } from 'react-redux';
 
 class Home extends React.Component {
@@ -14,6 +14,7 @@ class Home extends React.Component {
       address: '0xf0417825227c5bdcb39d2d9f44e069be3d0f69c4',
       abi: '[{"constant":false,"inputs":[{"name":"_number","type":"uint256"}],"name":"set","outputs":[],"payable":false,"stateMutability":"nonpayable","type":"function"},{"constant":true,"inputs":[],"name":"get","outputs":[{"name":"","type":"uint256"}],"payable":false,"stateMutability":"view","type":"function"}]',
       network: 'kovan',
+      shouldRedirect: false,
     };
 
     this.handleFormSubmit = this.handleFormSubmit.bind(this);
@@ -34,14 +35,14 @@ class Home extends React.Component {
     });
   }
 
-  handleFormSubmit(e) {
+  async handleFormSubmit(e) {
     e.preventDefault();
     const {
       address,
       abi,
       network,
     } = this.state;
-    this.props.getContractId('test', address, abi, network);
+    await this.props.addContract('test', address, abi, network);
   }
 
   render() {
@@ -49,15 +50,12 @@ class Home extends React.Component {
       contracts,
       address,
       abi,
+      shouldRedirect,
     } = this.state;
 
-    const {
-      contractId,
-    } = this.props;
-
-    if (contractId) {
+    if (shouldRedirect) {
       return (
-        <Redirect to={`/index/${contractId}`} />
+        <Redirect to={`/index/${address}`} />
       );
     }
 
@@ -77,7 +75,12 @@ class Home extends React.Component {
                   contracts.map(contract => (
                     <div key={contract.id} className="contract">
                       <a
-                        onClick={() => this.props.getContractIdSuccess(contract.id, contract.address)}>{contract.address}</a>
+                        onClick={() =>{
+                          this.setState({
+                            address: contract.address,
+                            shouldRedirect: true,
+                          })
+                        }}>{contract.address}</a>
                     </div>
                   ))
                 }
@@ -109,12 +112,10 @@ class Home extends React.Component {
 }
 
 const mapStateToProps = state => ({
-  contractId: state.app.contractId,
 });
 
 const mapDispatchToProps = {
-  getContractId,
-  getContractIdSuccess,
+  addContract,
 };
 
 export default connect(

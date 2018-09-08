@@ -8,6 +8,7 @@ import AlertCard from './AlertCard/AlertCard';
 import { fetchTriggers } from '../../actions/apiActions';
 import ActiveTriggers from '../ActiveTriggers/ActiveTriggers';
 import AddTrigger from '../AddTrigger/AddTrigger';
+import { getContractData } from '../../actions/contractActions';
 
 class ContractHome extends Component {
   constructor(props) {
@@ -19,11 +20,11 @@ class ContractHome extends Component {
     this.setActiveTab = this.setActiveTab.bind(this);
   }
 
-  componentDidMount() {
+  async componentDidMount() {
     // fetch active triggers
-    this.props.fetchTriggers();
+    await this.props.getContractData(this.props.match.params.id);
+    this.props.fetchTriggers(this.props.match.params.id);
     // fetch alerts for each trigger
-
   }
 
   setModal(modal) {
@@ -43,7 +44,9 @@ class ContractHome extends Component {
       <div className="contract-home-wrapper">
         <div className="container">
           <div>
-            <button className="button light" onClick={() => this.setModal('add-trigger')}>+ Add trigger</button>
+            <button className="button light" onClick={() => this.setModal('add-trigger')}>+ Add
+              trigger
+            </button>
             &nbsp;&nbsp;&nbsp;
             <button className="button light" onClick={() => this.setModal('active-triggers')}>View
               triggers
@@ -77,6 +80,7 @@ const mapStateToProps = (state) => ({
 });
 const mapDispatchToProps = (dispatch) => bindActionCreators({
   fetchTriggers,
+  getContractData,
 }, dispatch);
 
 export default connect(

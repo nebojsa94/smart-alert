@@ -4,7 +4,6 @@ import {
   TRIGGER_ADD_SUCCESS,
 } from './actionTypes';
 import { testApi } from '../constants/env';
-import { getContractIdSuccess } from './contractActions';
 import { parseDoughnutData, parseLineData } from '../services/utils';
 
 export const triggerTypeMap = {
@@ -74,10 +73,10 @@ export const triggerTypes = [
     danger: 'yellow',
   },
   {
-    type : 'METHODLESS_DEPOSIT',
-    name : 'Deposit without method',
-    description : 'Get notified when contract is topped up directly without method',
-    danger : 'red',
+    type: 'METHODLESS_DEPOSIT',
+    name: 'Deposit without method',
+    description: 'Get notified when contract is topped up directly without method',
+    danger: 'red',
   },
 ];
 
@@ -88,26 +87,25 @@ export const parseAlert = (alert) => {
   };
 };
 
-export const fetchTriggers = (id) => async (dispatch) => {
-  await new Promise((res) => setTimeout(res, 1000)); // TODO replace w API call
-  const triggers = [
-    {
-      id: '1',
-      type: 'WITHDRAW_CALLED',
-      name: 'Withdraw function called',
-      danger: 'red',
+export const fetchTriggers = () => async (dispatch, getState) => {
+  const {
+    app,
+  } = getState();
+  return fetch(`${testApi}/api/contract/${app.contractAddress}/triggers`, {
+    method: 'GET',
+    headers: {
+      'Accept': 'application/json',
+      'Content-Type': 'application/json'
     },
-    {
-      id: '2',
-      type: 'CONTRACT_CALLING',
-      name: 'Contracts calling my contract',
-      danger: 'orange',
-    },
-  ];
-  dispatch({
-    type: ACTIVE_TRIGGERS_FETCHED,
-    payload: { triggers }
-  });
+  })
+    .then(res => res.json())
+    .then(triggers => {
+      console.log(triggers);
+      dispatch({
+        type: ACTIVE_TRIGGERS_FETCHED,
+        payload: { triggers }
+      });
+    });
 };
 
 export const fetchStatisticsSuccess = (statistics) => ({
