@@ -8,23 +8,29 @@ import AlertCard from './AlertCard/AlertCard';
 import { fetchTriggers } from '../../actions/apiActions';
 import ActiveTriggers from '../ActiveTriggers/ActiveTriggers';
 import AddTrigger from '../AddTrigger/AddTrigger';
-import { getContractData } from '../../actions/contractActions';
+import { getContractData, pollAlerts } from '../../actions/contractActions';
 
 class ContractHome extends Component {
   constructor(props) {
     super(props);
     this.state = {
       showModal: '',
+      pollingInterval: 0,
     };
 
     this.setActiveTab = this.setActiveTab.bind(this);
   }
 
   async componentDidMount() {
-    // fetch active triggers
     await this.props.getContractData(this.props.match.params.id);
     this.props.fetchTriggers(this.props.match.params.id);
-    // fetch alerts for each trigger
+    this.setState({
+      pollingInterval: setInterval(this.props.pollAlerts, 2000)
+    })
+  }
+
+  componentWillUnmount() {
+    clearInterval(this.state.pollingInterval);
   }
 
   setModal(modal) {
@@ -81,6 +87,7 @@ const mapStateToProps = (state) => ({
 const mapDispatchToProps = (dispatch) => bindActionCreators({
   fetchTriggers,
   getContractData,
+  pollAlerts,
 }, dispatch);
 
 export default connect(

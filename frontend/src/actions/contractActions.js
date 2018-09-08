@@ -5,6 +5,7 @@ import {
   ADD_CONTRACT_REQUEST,
   ADD_CONTRACT_SUCCESS,
   ADD_CONTRACT_ERROR,
+  NEW_ALERTS,
 } from './actionTypes';
 import { apiUrl, testApi } from '../constants/env';
 import { addTriggerSuccess } from './apiActions';
@@ -58,7 +59,7 @@ export const addContractSuccess = (contractId, contractAddress) => ({
 
 const addContractToLS = (address, abi, id) => {
   let contracts = JSON.parse(localStorage.getItem('contracts') || '[]');
-  if (contracts.filter(contract => contract.id === id).length > 0) return;
+  contracts = contracts.filter(contract => contract.address !== address);
   contracts.push({ address, abi, id });
   localStorage.setItem('contracts', JSON.stringify(contracts));
 };
@@ -85,5 +86,19 @@ export const addContract = (name, contractAddress, abi, network) => (dispatch, g
       // dispatch contract.Name too?
       dispatch(addContractSuccess());
       addContractToLS(contractAddress, abi, contract._id);
+    });
+};
+
+export const newAlerts = (alerts) => ({
+  type: NEW_ALERTS,
+  payload: { alerts },
+});
+
+export const pollAlerts = (address) => (dispatch) => {
+  fetch(testApi + '/api/contract/' + address + '/poll')
+    .then(res => res.json())
+    .then(alerts => {
+      console.log(alerts);
+      dispatch(newAlerts(alerts));
     });
 };

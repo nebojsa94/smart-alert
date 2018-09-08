@@ -72,12 +72,13 @@ class Home extends React.Component {
 
           {
             contracts.length > 0 && [
-              <div className="saved-contracts">
+              <div className="saved-contracts" key="1">
                 <h2>Recent contracts</h2>
                 {
                   contracts.map(contract => (
                     <div key={contract.id} className="contract">
                       <a
+                        className="recent-ct"
                         onClick={() =>{
                           this.setState({
                             address: contract.address,
@@ -88,7 +89,7 @@ class Home extends React.Component {
                   ))
                 }
               </div>,
-              <h2>Add new contract</h2>
+              <h2 key="2">Add new contract</h2>
             ]
           }
 
