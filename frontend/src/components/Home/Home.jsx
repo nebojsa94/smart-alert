@@ -75,7 +75,7 @@ class Home extends React.Component {
                 <h2>Recent contracts</h2>
                 {
                   contracts.map(contract => (
-                    <div key={contract} className="contract">
+                    <div key={contract.id} className="contract">
                       <a
                         onClick={() => this.props.getContractIdSuccess(contract.id, contract.address)}>{contract.address}</a>
                     </div>

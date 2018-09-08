@@ -12,6 +12,8 @@ const INITIAL_STATE = {
   contractIdError: '',
   contractId: null,
   contractAddress: '',
+  // TODO REMOVE
+  contractAbi: [{"constant":false,"inputs":[{"name":"_number","type":"uint256"}],"name":"set","outputs":[],"payable":false,"stateMutability":"nonpayable","type":"function"},{"constant":true,"inputs":[],"name":"get","outputs":[{"name":"","type":"uint256"}],"payable":false,"stateMutability":"view","type":"function"}],
   activeTriggers: [],
   statistics: null,
 };
@@ -33,6 +35,7 @@ export default (state = INITIAL_STATE, action) => {
         ...state,
         contractId: payload.contractId,
         contractAddress: payload.contractAddress,
+        contractAbi: payload.abi,
         isFetchingContract: false,
       };
     }

@@ -57,7 +57,7 @@ export const parseLineData = (title, data = []) => {
 export const parseInputOutputs = (inputs, outputs, selectedTrigger, state) => {
   switch (selectedTrigger) {
     case 0:
-      inputs.method = state.method;
+      inputs.method = state.withdrawMethod;
       break;
     case 6:
       inputs.inputString.push({
@@ -82,3 +82,5 @@ export const parseInputOutputs = (inputs, outputs, selectedTrigger, state) => {
     selectedTrigger,
   };
 };
+
+export const listFunctions = (abi) => abi.filter(item => item.type === 'function');

@@ -3,7 +3,7 @@ import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 import { addTrigger, triggerTypes } from '../../actions/apiActions';
 import './AddTrigger.scss';
-import { parseInputOutputs } from '../../services/utils';
+import { listFunctions, parseInputOutputs } from '../../services/utils';
 
 class AddTrigger extends Component {
   constructor(props) {
@@ -11,7 +11,7 @@ class AddTrigger extends Component {
 
     this.state = {
       selectedTrigger: null,
-      method: '',
+      withdrawMethod: '',
       ipfsHashPosition: null,
       validateMethod: '',
       validatePosition: null,
@@ -21,6 +21,17 @@ class AddTrigger extends Component {
     this.addTrigger = this.addTrigger.bind(this);
     this.handleOptionChange = this.handleOptionChange.bind(this);
     this.handleInput = this.handleInput.bind(this);
+  }
+
+  componentDidMount() {
+    const methods = listFunctions(this.props.contractAbi);
+    if (!methods.length) return;
+    const firstMethodInCt = methods[0].name;
+    this.setState({
+      validateMethod: firstMethodInCt,
+      withdrawMethod: methods.filter(method => method.name === 'withdraw').length
+        ? 'withdraw' : firstMethodInCt, // set 'withdraw' as initial withdraw method name if it exists
+    })
   }
 
   handleOptionChange(e) {
@@ -40,7 +51,7 @@ class AddTrigger extends Component {
       selectedTrigger,
     } = this.state;
     let defaultInputs = {
-      method: '',
+      withdrawMethod: '',
       inputUint: [],
       inputString: [],
       outputUint: [],
@@ -97,12 +108,19 @@ class AddTrigger extends Component {
               <h3>Additional information</h3>
               {
                 selectedTrigger === 0 &&
-                <input
-                  name="method"
-                  onChange={this.handleInput}
-                  type="text"
-                  placeholder="Your withdraw function name"
-                />
+                <div className="label-wrapper">
+                  <label htmlFor="withdrawMethod">
+                    Your withdraw function name:
+                  </label>
+                  <select name="withdrawMethod" onChange={this.handleInput} id="withdrawMethod">
+                    {
+                      listFunctions(this.props.contractAbi).map(method => (
+                        <option key={method.name} value={method.name}>{method.name}</option>
+                      ))
+                    }
+                  </select>
+                </div>
+
               }
               {
                 selectedTrigger === 6 &&
@@ -116,24 +134,49 @@ class AddTrigger extends Component {
               {
                 selectedTrigger === 8 &&
                 <div>
-                  <input
-                    name="validateMethod"
-                    onChange={this.handleInput}
-                    type="text"
-                    placeholder="Method to validate"
-                  />
-                  <input
-                    name="validatePosition"
-                    onChange={this.handleInput}
-                    type="text"
-                    placeholder="Position of the parameter to validate"
-                  />
-                  <input
-                    name="validateRegExp"
-                    onChange={this.handleInput}
-                    type="text"
-                    placeholder="Your RegExp expression"
-                  />
+                  <div className="label-wrapper">
+                    <label htmlFor="validateMethod">
+                      Method to validate:
+                    </label>
+                    <select name="validateMethod" onChange={this.handleInput} id="validateMethod">
+                      {
+                        listFunctions(this.props.contractAbi).map(method => (
+                          <option key={method.name} value={method.name}>{method.name}</option>
+                        ))
+                      }
+                    </select>
+                  </div>
+                  <div className="label-wrapper">
+                    <label htmlFor="validatePosition">
+                      Parameter to validate:
+                    </label>
+                    <select name="validatePosition" onChange={this.handleInput} id="validatePosition">
+                      {
+                        this.state.validateMethod &&
+                        listFunctions(this.props.contractAbi)
+                          .filter(method => method.name === this.state.validateMethod).length &&
+                        listFunctions(this.props.contractAbi)
+                          .filter(method => method.name === this.state.validateMethod)[0]
+                          .inputs
+                          .map((inputs, i) => (
+                            <option key={inputs.name} value={i}>{inputs.name}</option>
+                          ))
+                      }
+                    </select>
+                  </div>
+                  <div className="label-wrapper">
+                    <label htmlFor="validatePosition">
+                      RegEx expression:
+                    </label>
+                    <input
+                      name="validateRegExp"
+                      id="validateRegExp"
+                      onChange={this.handleInput}
+                      type="text"
+                      placeholder="Qm[1-9A-Za-z][^OIl]{43}"
+                      className="monospace-input"
+                    />
+                  </div>
                 </div>
               }
             </div>
@@ -170,6 +213,7 @@ class AddTrigger extends Component {
 
 const mapStateToProps = (state) => ({
   activeTriggers: state.app.activeTriggers,
+  contractAbi: state.app.contractAbi,
 });
 const mapDispatchToProps = (dispatch) => bindActionCreators({
   addTrigger,

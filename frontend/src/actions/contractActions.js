@@ -9,11 +9,12 @@ export const getContractIdRequest = () => ({
   type: CONTRACT_ID_REQUEST,
 });
 
-export const getContractIdSuccess = (contractId, contractAddress) => ({
+export const getContractIdSuccess = (contractId, contractAddress, abi) => ({
   type: CONTRACT_ID_SUCCESS,
   payload: {
     contractId,
     contractAddress,
+    abi
   },
 });
 
@@ -26,6 +27,7 @@ export const getContractIdError = error => ({
 
 const addContractToLS = (address, abi, id) => {
   let contracts = JSON.parse(localStorage.getItem('contracts') || '[]');
+  if (contracts.filter(contract => contract.id === id).length > 0) return;
   contracts.push({ address, abi, id });
   localStorage.setItem('contracts', JSON.stringify(contracts));
 };
@@ -51,7 +53,7 @@ export const getContractId = (name, contractAddress, abi, network) => (dispatch,
     .then(contract => {
       console.log(contract);
       // dispatch contract.Name too?
-      dispatch(getContractIdSuccess(contract._id, contractAddress));
+      dispatch(getContractIdSuccess(contract._id, contractAddress, JSON.parse(abi)));
       addContractToLS(contractAddress, abi, contract._id)
     });
 };
