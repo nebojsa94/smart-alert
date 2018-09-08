@@ -51,11 +51,11 @@ class Dashboard extends Component {
 
         {
           activeTab === 'alerts' &&
-          <ContractHome />
+          <ContractHome {...this.props} />
         }
         {
           activeTab === 'stats' &&
-          <Statistics />
+          <Statistics {...this.props} />
         }
       </div>
     );

@@ -7,6 +7,10 @@
   align-items: center;
   justify-content: center;
   min-height: 100vh;
+
+  textarea {
+    resize: vertical;
+  }
 }
 
 .saved-contracts {
@@ -18,5 +22,16 @@
 
   .contract {
     margin-bottom: 15px;
+  }
+
+  .recent-ct {
+    transition: all .2s;
+    cursor: pointer;
+    border-bottom: 1px solid transparent;
+    color: $accent;
+    font-weight: bold;
+    &:hover {
+      border-bottom: 1px solid $accent;
+    }
   }
 }

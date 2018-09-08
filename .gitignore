@@ -63,3 +63,5 @@ typings/
 public
 config/config.json
 solidity/build/
+yarn.lock
+package-lock.json

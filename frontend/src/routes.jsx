@@ -11,7 +11,7 @@ class Routes extends React.Component {
       <Router>
         <div>
           <Route exact path="/" component={Home} />
-          <Route path="/index" component={Dashboard} />
+          <Route path="/index/:id" component={Dashboard} />
         </div>
       </Router>
     );

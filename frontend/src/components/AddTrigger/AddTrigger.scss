@@ -5,6 +5,15 @@
     margin: 2em 0 0;
   }
 
+  .label-wrapper {
+    display: flex;
+    align-items: baseline;
+    label {
+      margin-right: 10px;
+      white-space: nowrap;
+    }
+  }
+
   .trigger-types-wrapper {
     border-radius: 5px;
     border: 1px solid #eee;
@@ -68,6 +77,7 @@
 
     }
   }
+
   .alerts-wrapper {
     border-radius: 5px;
     border: 1px solid #eee;

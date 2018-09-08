@@ -57,17 +57,17 @@ export const parseLineData = (title, data = []) => {
 export const parseInputOutputs = (inputs, outputs, selectedTrigger, state) => {
   switch (selectedTrigger) {
     case 0:
-      inputs.method = state.method;
+      inputs.method = state.withdrawMethod;
       break;
     case 6:
-      inputs.inputString.push({
+      inputs.inputStrings.push({
         position: parseInt(state.ipfsHashPosition),
         value: ''
       });
       break;
     case 8:
       inputs.method = state.validateMethod;
-      inputs.inputString.push({
+      inputs.inputStrings.push({
         position: parseInt(state.validatePosition),
         value: state.validateRegExp,
       });
@@ -81,4 +81,9 @@ export const parseInputOutputs = (inputs, outputs, selectedTrigger, state) => {
     outputs,
     selectedTrigger,
   };
+};
+
+export const listFunctions = (abi, withParams = false) => {
+  if (typeof abi === 'string') abi = JSON.parse(abi);
+  return abi.filter(item => item.type === 'function' && !item.constant && (withParams ? item.inputs.length : true));
 };
