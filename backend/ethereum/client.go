@@ -28,9 +28,6 @@ func Dial(host string) (*Client, error) {
 
 	var parityVersionInfo ParityVersionInfo
 	if err = rpcClient.Call(&parityVersionInfo, "parity_versionInfo"); err == nil {
-		// We are talking to a parity node.
-		log.Printf("Using parity RPC Schema...")
-
 		schema = ParitySchema
 	}
 

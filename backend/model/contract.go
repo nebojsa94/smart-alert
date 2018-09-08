@@ -2,24 +2,20 @@ package model
 
 import (
 	"github.com/go-bongo/bongo"
-	"time"
 )
 
 type Contract struct {
 	bongo.DocumentBase `bson:",inline"`
-	Id                 string
-	Name               string
-	Address            string
-	Abi                string
-	CreatedAt          time.Time
+	Name               string `json:"name"`
+	Address            string `json:"address"`
+	Abi                string `json:"abi"`
 }
 
 func NewContract(name, address, abi string) *Contract {
 	return &Contract{
-		Name:      name,
-		Address:   address,
-		Abi:       abi,
-		CreatedAt: time.Now(),
+		Name:    name,
+		Address: address,
+		Abi:     abi,
 	}
 }
 

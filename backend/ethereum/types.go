@@ -45,8 +45,10 @@ type Block struct {
 type Transaction struct {
 	Hash string `json:"hash"`
 
-	From string `json:"from"`
-	To   string `json:"to"`
+	From  string `json:"from"`
+	To    string `json:"to"`
+	Input string `json:"input"`
+	Value int    `json:"value"`
 }
 
 type TransactionReceipt struct {
@@ -54,6 +56,8 @@ type TransactionReceipt struct {
 	To   string `json:"to"`
 
 	Status *Number `json:"status"` // Can be null, if null do a check anyways. 0x0 fail, 0x1 success
+	Input  string  `json:"input"`
+	Value  int     `json:"value"`
 }
 
 // States Types

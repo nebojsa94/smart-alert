@@ -4,7 +4,7 @@ import (
 	"fmt"
 	"github.com/go-bongo/bongo"
 	"github.com/julienschmidt/httprouter"
-	"github.com/nebojsa94/smart-alert/backend/config"
+	l "github.com/nebojsa94/smart-alert/backend/listener"
 	"github.com/nebojsa94/smart-alert/backend/service"
 	"github.com/rs/cors"
 	"log"
@@ -21,11 +21,11 @@ type Application struct {
 }
 
 func NewApplication() *Application {
-	config.Init()
+	//config.Init()
 
 	bongoConfig := &bongo.Config{
-		ConnectionString: "localhost",
-		Database:         "bongotest",
+		ConnectionString: "46.101.140.249:27017",
+		Database:         "smart-alert",
 	}
 
 	connection, err := bongo.Connect(bongoConfig)
@@ -46,12 +46,11 @@ func NewApplication() *Application {
 	}
 
 	app.Router = NewRouter(app)
-
 	return app
 }
 
 func (app *Application) Start() error {
-	httpPort := config.GetInt(config.HttpPort)
+	httpPort := 80
 
 	handler := cors.AllowAll().Handler(app.Router)
 
@@ -61,6 +60,9 @@ func (app *Application) Start() error {
 		log.Printf("Listening on port %d...", httpPort)
 		errCh <- http.ListenAndServe(fmt.Sprintf(":%d", httpPort), handler)
 	}()
+
+	listener := l.NewListener(*app.ContractService, *app.TransactionService, *app.TriggerService)
+	listener.Listen()
 
 	return <-errCh
 }

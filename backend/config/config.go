@@ -11,7 +11,7 @@ const (
 )
 
 var defaults = map[string]interface{}{
-	HttpPort: "8000",
+	HttpPort: "80",
 }
 
 var configName string

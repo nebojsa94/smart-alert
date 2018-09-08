@@ -47,3 +47,25 @@ func CreateContract(service model.ContractService) httprouter.Handle {
 		helper.SendResponse(w, 201, contract)
 	}
 }
+
+func GetContract(service model.ContractService) httprouter.Handle {
+	return func(w http.ResponseWriter, r *http.Request, params httprouter.Params) {
+		id := params.ByName("id")
+		if id == "" {
+			helper.SendResponse(w, 400, helper.Response{
+				"error": "Missing organization ID",
+			})
+			return
+		}
+
+		contract, err := service.Get(id)
+		if err != nil {
+			log.Printf("get contract: %s", err)
+
+			helper.BadRequestError(w, err)
+			return
+		}
+
+		helper.SendResponse(w, 200, contract)
+	}
+}

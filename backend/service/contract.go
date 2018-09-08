@@ -20,7 +20,7 @@ func (s *ContractService) Create(contract *model.Contract) error {
 
 func (s *ContractService) Get(id string) (*model.Contract, error) {
 	contract := &model.Contract{}
-	err := s.c.Collection("contract").FindById(bson.ObjectIdHex(id), contract)
+	err := s.c.Collection("contract").FindOne(bson.M{"address": id}, contract)
 	return contract, err
 }
 
@@ -29,7 +29,7 @@ func (s *ContractService) GetAll() *[]model.Contract {
 	results := s.c.Collection("contract").Find(bson.M{})
 
 	contract := model.Contract{}
-	for results.Next(contract) {
+	for results.Next(&contract) {
 		contracts = append(contracts, contract)
 	}
 
