@@ -30,6 +30,7 @@ const addContractToLS = (address, abi, id) => {
   localStorage.setItem('contracts', JSON.stringify(contracts));
 };
 
+
 export const getContractId = (name, contractAddress, abi, network) => (dispatch, getState) => {
   dispatch(getContractIdRequest());
 

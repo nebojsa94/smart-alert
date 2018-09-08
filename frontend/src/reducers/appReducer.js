@@ -4,6 +4,7 @@ import {
   CONTRACT_ID_SUCCESS,
   ACTIVE_TRIGGERS_FETCHED,
   STATISTICS_SUCCESS,
+  TRIGGER_ADD_SUCCESS,
 } from '../actions/actionTypes';
 
 const INITIAL_STATE = {
@@ -48,6 +49,16 @@ export default (state = INITIAL_STATE, action) => {
       return {
         ...state,
         activeTriggers: payload.triggers,
+      };
+    }
+
+    case TRIGGER_ADD_SUCCESS: {
+      return {
+        ...state,
+        activeTriggers: [
+          ...state.activeTriggers,
+          payload.trigger,
+        ]
       };
     }
 

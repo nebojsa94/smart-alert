@@ -53,3 +53,32 @@ export const parseLineData = (title, data = []) => {
     ]
   };
 };
+
+export const parseInputOutputs = (inputs, outputs, selectedTrigger, state) => {
+  switch (selectedTrigger) {
+    case 0:
+      inputs.method = state.method;
+      break;
+    case 6:
+      inputs.inputString.push({
+        position: parseInt(state.ipfsHashPosition),
+        value: ''
+      });
+      break;
+    case 8:
+      inputs.method = state.validateMethod;
+      inputs.inputString.push({
+        position: parseInt(state.validatePosition),
+        value: state.validateRegExp,
+      });
+      break;
+    default:
+      break;
+  }
+
+  return {
+    inputs,
+    outputs,
+    selectedTrigger,
+  };
+};
