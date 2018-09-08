@@ -14,7 +14,7 @@ func NewRouter(app *Application) *httprouter.Router {
 	router.POST("/api/contract", base.Do(route.CreateContract(app.ContractService)))
 	router.GET("/api/contract/:id", base.Do(route.GetContract(app.ContractService)))
 
-	router.POST("/api/contract/:id/trigger", base.Do(route.CreateTrigger(app.TriggerService)))
+	router.POST("/api/contract/:id/trigger", base.Do(route.CreateTrigger(*app.ContractService, *app.TransactionService, *app.TriggerService, *app.AlertService)))
 	router.GET("/api/contract/:id/triggers", base.Do(route.GetAllTrigger(app.TriggerService)))
 	router.GET("/api/contract/:id/trigger/:triggerId", base.Do(route.GetTrigger(app.TriggerService)))
 

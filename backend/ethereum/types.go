@@ -45,19 +45,23 @@ type Block struct {
 type Transaction struct {
 	Hash string `json:"hash"`
 
-	From  string `json:"from"`
-	To    string `json:"to"`
-	Input string `json:"input"`
-	Value int    `json:"value"`
+	From        string `json:"from"`
+	To          string `json:"to"`
+	Input       string `json:"input"`
+	Value       int    `json:"value"`
+	GasPrice    string `json:"gasPrice"`
+	BlockNumber string `json:"blockNumber"`
 }
 
 type TransactionReceipt struct {
 	From string `json:"from"`
 	To   string `json:"to"`
 
-	Status *Number `json:"status"` // Can be null, if null do a check anyways. 0x0 fail, 0x1 success
-	Input  string  `json:"input"`
-	Value  int     `json:"value"`
+	Status      *Number `json:"status"` // Can be null, if null do a check anyways. 0x0 fail, 0x1 success
+	Input       string  `json:"input"`
+	Value       int     `json:"value"`
+	GasPrice    string  `json:"gasPrice"`
+	BlockNumber string  `json:"blockNumber"`
 }
 
 // States Types

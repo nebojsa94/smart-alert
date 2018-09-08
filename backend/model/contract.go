@@ -9,6 +9,7 @@ type Contract struct {
 	Name               string `json:"name"`
 	Address            string `json:"address"`
 	Abi                string `json:"abi"`
+	BlockNumber        int    `json:"blockNumber"`
 }
 
 func NewContract(name, address, abi string) *Contract {

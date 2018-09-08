@@ -5,12 +5,16 @@ import (
 	"encoding/hex"
 	"encoding/json"
 	"fmt"
+	"github.com/ethereum/go-ethereum/accounts/abi"
 	"github.com/nebojsa94/smart-alert/backend/ethereum"
 	"github.com/nebojsa94/smart-alert/backend/model"
 	"github.com/nebojsa94/smart-alert/backend/service"
 	"net/http"
 	"os"
 	"os/signal"
+	"regexp"
+	"strconv"
+	"strings"
 )
 
 type Listener struct {
@@ -62,7 +66,7 @@ func (l *Listener) Listen() {
 				fmt.Println("Interrupt signal received, exiting...")
 				os.Exit(0)
 			case blockNum := <-sub:
-				processBlock(l, client, blockNum)
+				ProcessBlock(l.ContractService, l.TransactionService, l.TriggerService, l.AlertService, client, blockNum)
 			}
 		}
 	}()
@@ -81,7 +85,7 @@ func makeContext() context.Context {
 	return ctx
 }
 
-func processBlock(l *Listener, client *ethereum.Client, blockNumber int64) {
+func ProcessBlock(contractService service.ContractService, transactionService service.TransactionService, triggerService service.TriggerService, alertService service.AlertService, client *ethereum.Client, blockNumber int64) {
 	block, err := client.GetBlock(blockNumber)
 	if err != nil {
 		fmt.Println("Block fetching failed")
@@ -89,13 +93,13 @@ func processBlock(l *Listener, client *ethereum.Client, blockNumber int64) {
 	}
 
 	for _, t := range block.Transactions {
-		if c, err := l.ContractService.Get(t.To); err == nil {
-			processTransaction(l.TransactionService, l.TriggerService, l.AlertService, c, client, t)
+		if c, err := contractService.Get(t.To); err == nil {
+			ProcessTransaction(transactionService, triggerService, alertService, c, client, t, block)
 		}
 	}
 }
 
-func processTransaction(transactionService service.TransactionService, triggerService service.TriggerService, alertService service.AlertService, contract *model.Contract, client *ethereum.Client, t *ethereum.Transaction) {
+func ProcessTransaction(transactionService service.TransactionService, triggerService service.TriggerService, alertService service.AlertService, contract *model.Contract, client *ethereum.Client, t *ethereum.Transaction, block *ethereum.Block) {
 	fmt.Println("Processing transaction", t.To)
 	receipt, err := client.GetTransactionReceipt(t.Hash)
 	if err != nil {
@@ -109,6 +113,28 @@ func processTransaction(transactionService service.TransactionService, triggerSe
 	}
 
 	transaction := transactionService.ConvertEthereumTransaction(t, contract)
+
+	triggers, _ := triggerService.GetAll(contract.Address)
+
+	decodeInput, _ := hex.DecodeString(t.Input[2:])
+	decodedData, err := service.ParseCallData(decodeInput, contract.Abi)
+	if err != nil {
+		abispec, _ := abi.JSON(strings.NewReader(contract.Abi))
+		if _, err := service.MethodById(&abispec, decodeInput[:4]); err != nil {
+			for _, trigger := range *triggers {
+				if trigger.Type == model.InvalidContractMethod {
+					ValidationFailed(alertService, transaction, trigger.Id.Hex(), map[string]string{
+						"alert": "Invalid contract method",
+						"hash":  string(decodeInput[:4]),
+					})
+				}
+			}
+		}
+		fmt.Print("Unable to decode data")
+		return
+	}
+	transaction.DecodedCallData = decodedData
+
 	switch receipt.Status.Value() {
 	case 0:
 		err := transactionService.Process(transaction, contract, false)
@@ -124,51 +150,100 @@ func processTransaction(transactionService service.TransactionService, triggerSe
 		fmt.Println("Transaction in unknown status")
 	}
 
-	triggers, _ := triggerService.GetAll(contract.Address)
-
-	decodeInput, _ := hex.DecodeString(t.Input[2:])
-	decodedData, err := service.ParseCallData(decodeInput, contract.Abi)
-	if err != nil {
-		fmt.Print("Unable to decode data")
-	}
-
 	for _, trigger := range *triggers {
 		switch trigger.Type {
 		case model.WithdrawCalled:
 			{
-				if trigger.Method == decodedData.Name {
-					fmt.Println("Withdraw Called")
+				if trigger.Method == decodedData.Name && transaction.Ok {
+					ValidationFailed(alertService, transaction, trigger.Id.Hex(), map[string]string{
+						"alert":   "Withdraw Called",
+						"address": transaction.From,
+					})
 				}
 			}
 
 		case model.NonAuthorizedWithdraw:
 			{
-				if trigger.Method == decodedData.Name {
-					fmt.Println("Withdraw Called")
+				if trigger.Method == decodedData.Name && !transaction.Ok {
+					ValidationFailed(alertService, transaction, trigger.Id.Hex(), map[string]string{
+						"alert":   "Unauthorized Withdraw Called",
+						"address": transaction.From,
+					})
 				}
 			}
 		case model.HighFailedTransactions:
 			{
+				failed := 0
+				success := 0
+				for i := len(*transactionService.GetAll(contract.Address)) - 1; i > max(len(*transactionService.GetAll(contract.Address))-11, 0); i-- {
+					if transaction.Ok {
+						success++
+					} else {
+						failed++
+					}
+				}
 
-			}
-		case model.InvalidContractMethod:
-			{
-
+				if failed > success {
+					ValidationFailed(alertService, transaction, trigger.Id.Hex(), map[string]string{
+						"alert":   "Detected high number of failed transactions",
+						"failed":  string(failed),
+						"success": string(success),
+					})
+				}
 			}
 		case model.ContractCalling:
 			{
+				trace, err := client.GetTransactionTrace(t.Hash)
+				if err != nil {
+					fmt.Println("Unable to trace")
+					return
+				}
 
+				address := t.To
+
+				for _, state := range trace.States() {
+					if state.Op() == "CALL" {
+						if "0x"+state.Stack()[len(state.Stack())-2][:24] == address {
+							ValidationFailed(alertService, transaction, trigger.Id.Hex(), map[string]string{
+								"alert":   "Contract calling",
+								"address": address,
+							})
+						}
+					}
+				}
 			}
 		case model.BlockFilling:
 			{
+				var count map[string]int
+				max := 0
+				var maxAddress string
+				total := 0
+				for _, t := range block.Transactions {
+					if t.To == contract.Address {
+						count[t.From]++
+						total++
+						if count[t.From] > max {
+							max = count[t.From]
+							maxAddress = t.From
+						}
+					}
+				}
 
+				if total > 8 && maxAddress != "" && count[maxAddress]*2 > total {
+					ValidationFailed(alertService, transaction, trigger.Id.Hex(), map[string]string{
+						"alert":   "Block filling",
+						"address": maxAddress,
+						"count":   string(count[maxAddress]),
+						"total":   string(total),
+					})
+				}
 			}
 		case model.ValidateIpfs:
 			{
 				resp, err := http.Get("https://ipfs.decenter.com/api/v0/object/stat?arg=" + decodedData.Inputs[trigger.InputStrings[0].Position-1].Value.(string))
 				if err != nil {
 					ValidationFailed(alertService, transaction, model.ValidateIpfs, map[string]string{
-						"err": err.Error(),
+						"alert": err.Error(),
 					})
 				}
 
@@ -177,18 +252,46 @@ func processTransaction(transactionService service.TransactionService, triggerSe
 
 				if ipfsResponse.CumulativeSize > 1000 {
 					ValidationFailed(alertService, transaction, trigger.Id.Hex(), map[string]string{
-						"err":  "File too big",
-						"size": string(ipfsResponse.CumulativeSize),
+						"alert": "File too big",
+						"size":  string(ipfsResponse.CumulativeSize),
 					})
 				}
 			}
 		case model.HighGasPrice:
 			{
+				count := 0
+				total := 0
+				for _, t := range block.Transactions {
+					if t.To == contract.Address {
+						total++
+						gasPrice, _ := strconv.ParseInt(t.GasPrice, 16, 64)
+						if gasPrice > 100000000000 {
+							count++
+						}
+					}
+				}
 
+				if total > 8 && count*2 > total {
+					ValidationFailed(alertService, transaction, trigger.Id.Hex(), map[string]string{
+						"alert": "High gas prices",
+						"count": string(count),
+						"total": string(total),
+					})
+				}
 			}
 		case model.InputCriteria:
 			{
+				for _, input := range trigger.InputStrings {
+					if matched, _ := regexp.Match(input.Value, []byte(decodedData.Inputs[input.Position-1].Value.(string))); matched {
+						ValidationFailed(alertService, transaction, trigger.Id.Hex(), map[string]string{
+							"alert":    "Input criteria matched",
+							"method":   trigger.Method,
+							"position": string(input.Position),
+							"regex":    input.Value,
+						})
+					}
 
+				}
 			}
 		}
 	}
@@ -197,4 +300,12 @@ func processTransaction(transactionService service.TransactionService, triggerSe
 func ValidationFailed(service service.AlertService, transaction *model.Transaction, triggerId string, parameters map[string]string) {
 	alert := model.NewAlert(triggerId, transaction.Hash, parameters)
 	service.Create(alert)
+}
+
+func max(a, b int) int {
+	if a > b {
+		return a
+	}
+
+	return b
 }

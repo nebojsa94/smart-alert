@@ -42,6 +42,9 @@ type Transaction struct {
 	InputUint          []ArgumentsUint   `json:"input_uint"`
 	InputString        []ArgumentsString `json:"input_string"`
 	Ok                 bool              `json:"ok"`
+	GasPrice           string            `json:"gasPrice"`
+	BlockNumber        string            `json:"blockNumber"`
+	DecodedCallData    *DecodedCallData  `json:"decodedCallData"`
 }
 
 func NewTransaction(hash, contractAddress, to, from string, value int, inputsUint []ArgumentsUint, inputsString []ArgumentsString) *Transaction {

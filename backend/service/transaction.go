@@ -27,6 +27,8 @@ type Transaction struct {
 	From               string
 	Value              int
 	Ok                 bool
+	GasPrice           string `json:"gasPrice"`
+	BlockNumber        string `json:"blockNumber"`
 }
 
 func NewTransactionService(c *bongo.Connection) *TransactionService {
@@ -184,6 +186,15 @@ func ParseCallData(calldata []byte, abidata string) (*model.DecodedCallData, err
 		return nil, fmt.Errorf("WARNING: Supplied data is stuffed with extra data. \nWant %s\nHave %s\nfor method %v", exp, was, method.Sig())
 	}
 	return &decoded, nil
+}
+
+func MethodById(abi *abi.ABI, sigdata []byte) (*abi.Method, error) {
+	for _, method := range abi.Methods {
+		if bytes.Equal(method.Id(), sigdata[:4]) {
+			return &method, nil
+		}
+	}
+	return nil, fmt.Errorf("no method with id: %#x", sigdata[:4])
 }
 
 func getBytes(key interface{}) ([]byte, error) {
