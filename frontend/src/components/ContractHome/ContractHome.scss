@@ -1,0 +1,18 @@
+@import '../../styles/variables/colors';
+
+.nav {
+  background-color: $accent;
+  height: 60px;
+  margin-bottom: 20px;
+  line-height: 60px;
+  color: white;
+  .logo {
+    margin: 0 10px;
+    display: inline-block;
+  }
+
+}
+
+h2 {
+  margin: 1em 0;
+}
