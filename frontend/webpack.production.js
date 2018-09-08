@@ -99,9 +99,10 @@ const config = {
       inject: true,
       template: 'src/index.html',
       filename: 'index.html',
-      favicon: 'src/favicon.ico',
+      // favicon: 'src/favicon.ico',
       hash: true,
     }),
+  ]
 };
 
 module.exports = config;

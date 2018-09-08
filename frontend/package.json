@@ -5,7 +5,7 @@
   "main": "src/index.jsx",
   "scripts": {
     "dev": "webpack-dev-server --open --host 127.0.0.1 --port 3300 --compress --config ./webpack.config.js",
-    "prod": "webpack --config ./webpack.production.js --mode production"
+    "prod": "webpack --config ./webpack.production.js -p"
   },
   "keywords": [],
   "author": "@nebojsa94, @Matko95, @sterlu",
@@ -26,6 +26,7 @@
     "babel-preset-stage-2": "^6.24.1"
   },
   "dependencies": {
+    "add-asset-html-webpack-plugin": "^2.1.3",
     "babel-core": "^6.26.3",
     "babel-loader": "^7.1.4",
     "babel-polyfill": "^6.26.0",
@@ -34,6 +35,7 @@
     "chart.js": "^2.7.2",
     "eslint-plugin-import": "^2.12.0",
     "eslint-plugin-jsx-a11y": "^6.0.3",
+    "extract-text-webpack-plugin": "^3.0.2",
     "html-webpack-plugin": "^3.2.0",
     "human-date": "^1.4.0",
     "node-sass": "^4.9.0",
@@ -45,6 +47,7 @@
     "react-router-dom": "^4.3.1",
     "redux": "^4.0.0",
     "redux-thunk": "^2.3.0",
+    "resolve-url-loader": "^2.3.1",
     "webpack": "^3.10.0",
     "webpack-cli": "^3.0.3"
   }
