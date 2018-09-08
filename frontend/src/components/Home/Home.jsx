@@ -55,7 +55,7 @@ class Home extends React.Component {
       <div className='home-page'>
         <div className="centered-container">
           <div className="title-wrapper">
-            <h1>Smart alert</h1>
+            <h1>Smart Alert</h1>
             <p>Watchdog for your contracts</p>
           </div>
 
@@ -75,21 +75,18 @@ class Home extends React.Component {
 
           <form onSubmit={this.handleFormSubmit} className="form-wrapper">
             <div className="form-group">
-              <label htmlFor="">Address</label>
-              <input value={address} type="text" />
+              <input placeholder="Enter your contract address" name="address" onChange={this.handleInput} value={address} type="text" />
             </div>
             <div className="form-group">
-              <label htmlFor="">ABI:</label>
-              <textarea value={abi} />
+              <textarea placeholder="ABI" name="abi" onChange={this.handleInput} value={abi} />
             </div>
             <div className="form-group">
-              <label htmlFor="">Network:</label>
               <select name="" id="">
                 <option value="" disabled></option>
                 <option value="Kovan">Kovan</option>
               </select>
             </div>
-            <button onClick={this.handleFormSubmit} type="submit">Get my report</button>
+            <button className="button" onClick={this.handleFormSubmit} type="submit">Get my report</button>
           </form>
         </div>
       </div>
