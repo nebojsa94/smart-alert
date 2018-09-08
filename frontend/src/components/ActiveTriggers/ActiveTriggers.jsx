@@ -14,7 +14,8 @@ class ActiveTriggers extends Component {
     return (
       <div className="modal">
         <div className="container">
-          <h2>Active triggers</h2>
+          <h2 className="has-subtitle">Active triggers</h2>
+          <p className="subtitle">We're currently monitoring for these triggers. </p>
           <div>
             {
               this.props.activeTriggers.map((trigger) => (

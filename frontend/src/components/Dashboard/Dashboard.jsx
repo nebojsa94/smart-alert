@@ -4,6 +4,7 @@ import { etherscanLink } from '../../services/utils';
 import ContractHome from '../ContractHome/ContractHome';
 
 import './Dashboard.scss';
+import connect from 'react-redux/es/connect/connect';
 
 class Dashboard extends Component {
   constructor(props) {
@@ -62,4 +63,10 @@ class Dashboard extends Component {
   }
 }
 
-export default Dashboard;
+const mapStateToProps = (state) => ({
+  contractAddress: state.app.contractAddress,
+});
+
+export default connect(
+  mapStateToProps,
+)(Dashboard);

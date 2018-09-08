@@ -110,12 +110,44 @@
   position: absolute;
   background-color: rgba(black, .5);
   top: 0;
-  bottom: 0;
+  bottom: -100px;
   left: 0;
   right: 0;
   z-index: 10;
+  animation: modal-fade-in .2s;
   .container {
     max-width: 1000px;
     padding: 20px;
+    animation: modal-slide-in .2s;
+    border-radius: 0 0 5px 5px;
   }
+  @keyframes modal-slide-in {
+    0% {
+      transform: translateY(-100px);
+    }
+
+    100% {
+      transform: translateY(0px);
+    }
+  }
+  @keyframes modal-fade-in {
+    0% {
+      opacity: 0;
+    }
+
+    100% {
+      opacity: 1;
+    }
+  }
+}
+
+
+.has-subtitle {
+  margin-bottom: 0;
+}
+
+.subtitle {
+  margin-top: .5em;
+  font-size: 14px;
+  color: #AAA;
 }

@@ -11,8 +11,8 @@ class Home extends React.Component {
 
     this.state = {
       contracts: [],
-      address: '',
-      abi: '',
+      address: '0xf0417825227c5bdcb39d2d9f44e069be3d0f69c4',
+      abi: '[{"constant":false,"inputs":[{"name":"_number","type":"uint256"}],"name":"set","outputs":[],"payable":false,"stateMutability":"nonpayable","type":"function"},{"constant":true,"inputs":[],"name":"get","outputs":[{"name":"","type":"uint256"}],"payable":false,"stateMutability":"view","type":"function"}]',
       network: 'kovan',
     };
 

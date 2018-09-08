@@ -7,6 +7,7 @@ import './ContractHome.scss';
 import AlertCard from './AlertCard/AlertCard';
 import { fetchTriggers } from '../../actions/apiActions';
 import ActiveTriggers from '../ActiveTriggers/ActiveTriggers';
+import AddTrigger from '../AddTrigger/AddTrigger';
 
 class ContractHome extends Component {
   constructor(props) {
@@ -42,7 +43,7 @@ class ContractHome extends Component {
       <div className="contract-home-wrapper">
         <div className="container">
           <div>
-            <button className="button light">+ Add trigger</button>
+            <button className="button light" onClick={() => this.setModal('add-trigger')}>+ Add trigger</button>
             &nbsp;&nbsp;&nbsp;
             <button className="button light" onClick={() => this.setModal('active-triggers')}>View
               triggers
@@ -61,6 +62,10 @@ class ContractHome extends Component {
         {
           this.state.showModal === 'active-triggers' &&
           <ActiveTriggers closeModal={() => this.setModal('')} />
+        }
+        {
+          this.state.showModal === 'add-trigger' &&
+          <AddTrigger closeModal={() => this.setModal('')} />
         }
       </div>
     );
