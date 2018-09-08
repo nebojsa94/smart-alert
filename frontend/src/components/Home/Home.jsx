@@ -1,6 +1,8 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 
+import './Home.scss';
+
 class Home extends React.Component {
   constructor(props) {
     super(props);
@@ -11,10 +13,18 @@ class Home extends React.Component {
   }
 
   componentDidMount() {
-    localStorage.getItem('contracts');
+    let contracts = localStorage.getItem('contracts') || [];
+
+    this.setState({
+      contracts: JSON.parse(contracts),
+    });
   }
 
   render() {
+    const {
+      contracts,
+    } = this.state;
+
     return (
       <div className='home-page'>
         <div className="centered-container">
@@ -23,6 +33,20 @@ class Home extends React.Component {
             <p>Watchdog for your contracts</p>
           </div>
 
+          {
+            contracts.length > 0 &&
+            <div className="saved-contracts">
+              <p>Saved contracts</p>
+              {
+                contracts.map(contract => (
+                  <div key={contract} className="contract">
+                    {contract}
+                  </div>
+                ))
+              }
+            </div>
+          }
+
           <div className="form-wrapper">
             <div className="form-group">
               <label htmlFor="">Address</label>
@@ -30,7 +54,7 @@ class Home extends React.Component {
             </div>
             <div className="form-group">
               <label htmlFor="">ABI:</label>
-              <textarea value="" />
+              <textarea />
             </div>
             <div className="form-group">
               <label htmlFor="">Network:</label>
