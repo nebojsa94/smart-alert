@@ -73,6 +73,12 @@ export const triggerTypes = [
     description: 'Is triggered where the contract input is not in the defined regex form',
     danger: 'yellow',
   },
+  {
+    type : 'METHODLESS_DEPOSIT',
+    name : 'Deposit without method',
+    description : 'Get notified when contract is topped up directly without method',
+    danger : 'red',
+  },
 ];
 
 export const parseAlert = (alert) => {
