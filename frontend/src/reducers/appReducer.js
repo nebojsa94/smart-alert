@@ -5,6 +5,8 @@ import {
   ACTIVE_TRIGGERS_FETCHED,
   STATISTICS_SUCCESS,
   TRIGGER_ADD_SUCCESS,
+  NEW_ALERTS,
+  PAST_ALERTS,
 } from '../actions/actionTypes';
 
 const INITIAL_STATE = {
@@ -15,6 +17,8 @@ const INITIAL_STATE = {
   contractAbi: [],
   activeTriggers: [],
   statistics: null,
+  alerts: [],
+  pastAlerts: [],
 };
 
 export default (state = INITIAL_STATE, action) => {
@@ -67,6 +71,23 @@ export default (state = INITIAL_STATE, action) => {
       return {
         ...state,
         statistics: payload.statistics,
+      };
+    }
+
+    case NEW_ALERTS: {
+      return {
+        ...state,
+        alerts: [
+          ...state.alerts,
+          ...payload.alerts,
+        ],
+      };
+    }
+
+    case PAST_ALERTS: {
+      return {
+        ...state,
+        pastAlerts: payload.alerts,
       };
     }
 

@@ -4,6 +4,7 @@ import { Redirect } from 'react-router-dom';
 import { connect } from 'react-redux';
 
 import './ActiveTriggers.scss';
+import { triggerTypeMap } from '../../actions/apiActions';
 
 class ActiveTriggers extends Component {
   constructor(props) {
@@ -27,8 +28,8 @@ class ActiveTriggers extends Component {
               <p className="subtitle">We're currently monitoring for these triggers. </p>
               {
                 this.props.activeTriggers.map((trigger) => (
-                  <div key={trigger.id} className={`active-trigger-wrapper danger-${trigger.danger}`}>
-                    <h3 title={trigger.type}>{trigger.name}</h3>
+                  <div key={trigger._id} className={`active-trigger-wrapper danger-${trigger.danger}`}>
+                    <h3 title={triggerTypeMap[trigger.type].description}>{triggerTypeMap[trigger.type].name}</h3>
                     {/*<p>{JSON.stringify(trigger)}</p>*/}
                     {/*{SHOW TRIGGER PARAMS HERE}*/}
                     <p>

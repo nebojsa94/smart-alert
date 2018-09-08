@@ -3,7 +3,7 @@ import { bindActionCreators } from 'redux';
 import { Redirect } from 'react-router-dom';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
-import { prettifyDate } from '../../../services/utils';
+import { etherscanLink, prettifyDate } from '../../../services/utils';
 
 import './AlertCard.scss';
 
@@ -14,10 +14,14 @@ class AlertCard extends Component {
 
   render() {
     const {
-      name = 'Name missing',
-      danger = 'red',
+      trigger: {
+        name = 'Name missing',
+        danger = 'red',
+      },
       date = new Date(),
-      txHash = '0x',
+      originalObject: {
+        transactionHash = '0x',
+      }
     } = this.props.alert;
 
     return (
@@ -25,7 +29,11 @@ class AlertCard extends Component {
         <div className="alert-icon" />
         <div className="meta">
           <h3>{name} <span className="date">{prettifyDate(date)}</span></h3>
-          <p>tx hash: {txHash}</p>
+          <p>
+            <a target="_blank" rel="noopener" href={etherscanLink(transactionHash)}>
+              tx hash: {transactionHash}
+            </a>
+          </p>
         </div>
       </div>
     );

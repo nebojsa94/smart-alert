@@ -33,6 +33,13 @@
       color: #AAA;
       font-size: 14px;
       margin: .5em 0 0;
+      a {
+        color: inherit;
+        transition: color .2s;
+        &:hover {
+          color: #777;
+        }
+      }
     }
   }
 

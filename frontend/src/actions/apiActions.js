@@ -2,13 +2,12 @@ import {
   ACTIVE_TRIGGERS_FETCHED,
   STATISTICS_SUCCESS,
   TRIGGER_ADD_SUCCESS,
+  NEW_ALERTS,
+  PAST_ALERTS,
 } from './actionTypes';
 import { testApi } from '../constants/env';
-import { parseDoughnutData, parseLineData } from '../services/utils';
+import { parseDoughnutData, parseLineData, parseAlert } from '../services/utils';
 
-export const triggerTypeMap = {
-  'WITHDRAW_CALLED': 'Withdraw function called'
-};
 
 export const severity = {
   'red': 3,
@@ -80,12 +79,10 @@ export const triggerTypes = [
   },
 ];
 
-export const parseAlert = (alert) => {
-  return {
-    ...alert,
-    name: triggerTypeMap[alert.type],
-  };
-};
+export const triggerTypeMap = Object.values(triggerTypes).reduce((accumulator, trigger) => {
+  accumulator[trigger.type] = trigger;
+  return accumulator;
+});
 
 export const fetchTriggers = () => async (dispatch, getState) => {
   const {
@@ -176,5 +173,40 @@ export const addTrigger = (inputs, outputs, trigger) => (dispatch, getState) => 
     .then(response => {
       console.log(response);
       dispatch(addTriggerSuccess(parsedTrigger));
+    });
+};
+
+export const newAlerts = (alerts) => ({
+  type: NEW_ALERTS,
+  payload: { alerts },
+});
+
+export const pastAlerts = (alerts) => ({
+  type: PAST_ALERTS,
+  payload: { alerts },
+});
+
+export const pollAlerts = () => (dispatch, getState) => {
+  const address = getState().app.contractAddress;
+  fetch(testApi + '/api/contract/' + address + '/poll')
+    .then(res => res.json())
+    .then(alerts => {
+      console.log(alerts);
+      if (!alerts) return;
+      alerts = alerts.map(parseAlert);
+      dispatch(newAlerts(alerts));
+    });
+};
+
+export const fetchPastAlerts = () => (dispatch, getState) => {
+  const address = getState().app.contractAddress;
+  fetch(testApi + '/api/contract/' + address + '/alerts')
+    .then(res => res.json())
+    .then(alerts => {
+      console.log(alerts);
+      alerts = alerts.sort((a, b) => b._created.localeCompare(a._created));
+      if (!alerts) return;
+      alerts = alerts.map(parseAlert);
+      dispatch(pastAlerts(alerts));
     });
 };

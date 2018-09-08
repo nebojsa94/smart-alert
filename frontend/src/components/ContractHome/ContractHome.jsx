@@ -5,10 +5,10 @@ import { connect } from 'react-redux';
 
 import './ContractHome.scss';
 import AlertCard from './AlertCard/AlertCard';
-import { fetchTriggers } from '../../actions/apiActions';
 import ActiveTriggers from '../ActiveTriggers/ActiveTriggers';
 import AddTrigger from '../AddTrigger/AddTrigger';
-import { getContractData, pollAlerts } from '../../actions/contractActions';
+import { fetchTriggers, pollAlerts, fetchPastAlerts } from '../../actions/apiActions';
+import { getContractData } from '../../actions/contractActions';
 
 class ContractHome extends Component {
   constructor(props) {
@@ -24,6 +24,7 @@ class ContractHome extends Component {
   async componentDidMount() {
     await this.props.getContractData(this.props.match.params.id);
     this.props.fetchTriggers(this.props.match.params.id);
+    this.props.fetchPastAlerts();
     this.setState({
       pollingInterval: setInterval(this.props.pollAlerts, 2000)
     })
@@ -58,13 +59,24 @@ class ContractHome extends Component {
               triggers
             </button>
           </div>
-          <div>
-            <h2>Latest alerts</h2>
-            <AlertCard alert={{}} />
-          </div>
+          {
+            this.props.alerts.length > 0 &&
+            <div>
+              <h2>Latest alerts</h2>
+              {
+                this.props.alerts.map(alert => (
+                  <AlertCard key={alert.originalObject._id} alert={alert} />
+                ))
+              }
+            </div>
+          }
           <div>
             <h2>Past alerts</h2>
-            <AlertCard alert={{}} />
+            {
+              this.props.pastAlerts.map(alert => (
+                <AlertCard key={alert.originalObject._id} alert={alert} />
+              ))
+            }
           </div>
         </div>
 
@@ -83,11 +95,14 @@ class ContractHome extends Component {
 
 const mapStateToProps = (state) => ({
   contractAddress: state.app.contractAddress,
+  alerts: state.app.alerts,
+  pastAlerts: state.app.pastAlerts,
 });
 const mapDispatchToProps = (dispatch) => bindActionCreators({
   fetchTriggers,
   getContractData,
   pollAlerts,
+  fetchPastAlerts,
 }, dispatch);
 
 export default connect(

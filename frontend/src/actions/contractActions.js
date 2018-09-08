@@ -88,17 +88,3 @@ export const addContract = (name, contractAddress, abi, network) => (dispatch, g
       addContractToLS(contractAddress, abi, contract._id);
     });
 };
-
-export const newAlerts = (alerts) => ({
-  type: NEW_ALERTS,
-  payload: { alerts },
-});
-
-export const pollAlerts = (address) => (dispatch) => {
-  fetch(testApi + '/api/contract/' + address + '/poll')
-    .then(res => res.json())
-    .then(alerts => {
-      console.log(alerts);
-      dispatch(newAlerts(alerts));
-    });
-};
