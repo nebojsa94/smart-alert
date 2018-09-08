@@ -11,6 +11,7 @@ class Home extends React.Component {
 
     this.state = {
       contracts: [],
+      name: 'DemoContract.sol',
       address: '0xf0417825227c5bdcb39d2d9f44e069be3d0f69c4',
       abi: '[{"constant":false,"inputs":[{"name":"_number","type":"uint256"}],"name":"set","outputs":[],"payable":false,"stateMutability":"nonpayable","type":"function"},{"constant":true,"inputs":[],"name":"get","outputs":[{"name":"","type":"uint256"}],"payable":false,"stateMutability":"view","type":"function"}]',
       network: 'kovan',
@@ -43,10 +44,11 @@ class Home extends React.Component {
       address,
       abi,
       network,
+      name,
     } = this.state;
     // Add name to form?
     try {
-      await this.props.addContract('test', address, abi, network);
+      await this.props.addContract(name, address, abi, network);
       this.setState({
         shouldRedirect: true,
       })
@@ -60,6 +62,7 @@ class Home extends React.Component {
     const {
       contracts,
       address,
+      name,
       abi,
       shouldRedirect,
     } = this.state;
@@ -92,7 +95,7 @@ class Home extends React.Component {
                             address: contract.address,
                             shouldRedirect: true,
                           })
-                        }}>{contract.address}</a>
+                        }}>{contract.name} - {contract.address}</a>
                     </div>
                   ))
                 }
@@ -102,6 +105,10 @@ class Home extends React.Component {
           }
 
           <form onSubmit={this.handleFormSubmit} className="form-wrapper">
+            <div className="form-group">
+              <input placeholder="Contract name" name="name"
+                     onChange={this.handleInput} value={name} type="text" />
+            </div>
             <div className="form-group">
               <input placeholder="Enter your contract address" name="address"
                      onChange={this.handleInput} value={address} type="text" />

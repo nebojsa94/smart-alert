@@ -14,14 +14,20 @@
 }
 
 .saved-contracts {
-  margin-bottom: 100px;
+  margin-bottom: 60px;
+  font-weight: 300;
+  font-size: 14px;
 
   p {
-    margin-bottom: 20px;
+    margin-bottom: 12px;
+    color: $gray;
   }
 
   .contract {
-    margin-bottom: 15px;
+    margin-bottom: 12px;
+    color: $accent;
+    text-decoration: underline;
+    cursor: pointer;
   }
 
   .recent-ct {
