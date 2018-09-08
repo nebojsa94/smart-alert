@@ -33,8 +33,10 @@ class ContractHome extends Component {
     return (
       <div className="contract-home-wrapper">
         <div className="nav">
-          <a className="logo" href="">Logo</a>
-          <span>contract address</span>
+          <div className="container">
+            <a className="logo" href="">SmartAlert</a>
+            <span>contract address</span>
+          </div>
         </div>
 
         <div className="container">

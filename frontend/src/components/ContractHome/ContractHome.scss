@@ -1,14 +1,22 @@
 @import '../../styles/variables/colors';
 
 .nav {
-  background-color: $accent;
-  height: 60px;
-  margin-bottom: 20px;
-  line-height: 60px;
-  color: white;
-  .logo {
-    margin: 0 10px;
-    display: inline-block;
+  position: relative;
+  z-index: 1;
+  .container {
+    padding: 0 20px;
+    line-height: 60px;
+    height: 60px;
+    color: $accent;
+    border-bottom: 1px solid #CED3E6;
+    background-color: white;
+    display: flex;
+    justify-content: space-between;
+
+    .logo {
+      font-size: 32px;
+      font-weight: bold;
+    }
   }
 
 }
