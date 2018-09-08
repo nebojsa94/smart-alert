@@ -25,7 +25,7 @@ class Dashboard extends Component {
 
   render() {
     const { activeTab } = this.state;
-    const { contractAddress = '0x' } = this.props;
+    const { contractAddress = '0x', contractName = '' } = this.props;
     return (
       <div className="contract-home-wrapper">
         <div className="nav">
@@ -45,7 +45,7 @@ class Dashboard extends Component {
               className="ct-address"
               href={etherscanLink(contractAddress)}
               target="_blank" rel="noopener"
-            >{contractAddress}</a>
+            > {contractName} - {contractAddress}</a>
           </div>
         </div>
 
@@ -64,6 +64,7 @@ class Dashboard extends Component {
 
 const mapStateToProps = (state) => ({
   contractAddress: state.app.contractAddress,
+  contractName: state.app.contractName,
 });
 
 export default connect(

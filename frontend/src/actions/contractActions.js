@@ -14,9 +14,10 @@ export const getContractDataRequest = () => ({
   type: CONTRACT_DATA_REQUEST,
 });
 
-export const getContractDataSuccess = (contractAddress, abi) => ({
+export const getContractDataSuccess = (contractName, contractAddress, abi) => ({
   type: CONTRACT_DATA_SUCCESS,
   payload: {
+    contractName,
     contractAddress,
     abi
   },
@@ -41,7 +42,7 @@ export const getContractData = (address) => (dispatch) => {
     .then(res => res.json())
     .then(response => {
       console.log(response);
-      dispatch(getContractDataSuccess(response.address, response.abi));
+      dispatch(getContractDataSuccess(response.name, response.address, response.abi));
     });
 };
 
@@ -61,10 +62,10 @@ export const addContractSuccess = (contractId, contractAddress) => ({
   },
 });
 
-const addContractToLS = (address, abi, id) => {
+const addContractToLS = (name, address, abi, id) => {
   let contracts = JSON.parse(localStorage.getItem('contracts') || '[]');
   contracts = contracts.filter(contract => contract.address !== address);
-  contracts.push({ address, abi, id });
+  contracts.push({ name, address, abi, id });
   localStorage.setItem('contracts', JSON.stringify(contracts));
 };
 
@@ -88,7 +89,7 @@ export const addContract = (name, contractAddress, abi, network) => (dispatch, g
       .then(contract => {
         console.log(contract);
         dispatch(addContractSuccess());
-        addContractToLS(contractAddress, abi, contract._id);
+        addContractToLS(name, contractAddress, abi, contract._id);
         resolve(contract);
       })
       .catch((err) => {

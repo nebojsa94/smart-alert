@@ -13,6 +13,7 @@ const INITIAL_STATE = {
   isFetchingContract: false,
   contractIdError: '',
   contractId: null,
+  contractName: '',
   contractAddress: '',
   contractAbi: [],
   activeTriggers: [],
@@ -36,6 +37,7 @@ export default (state = INITIAL_STATE, action) => {
     case CONTRACT_DATA_SUCCESS: {
       return {
         ...state,
+        contractName: payload.contractName,
         contractAddress: payload.contractAddress,
         contractAbi: payload.abi,
         isFetchingContract: false,
