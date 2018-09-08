@@ -157,10 +157,10 @@ export const addTrigger = (inputs, outputs, trigger) => (dispatch, getState) => 
     'description': trigger.description,
     'level': severity[trigger.danger],
     'method': inputs.method,
-    'inputUint': [...inputs.inputUint],
-    'inputString': [...inputs.inputString],
-    'outputUint': [...outputs.outputUint],
-    'outputString': [...outputs.outputString],
+    'inputUints': [...inputs.inputUint],
+    'inputStrings': [...inputs.inputString],
+    'outputUints': [...outputs.outputUint],
+    'outputStrings': [...outputs.outputString],
   };
 
   return fetch(`${testApi}/api/contract/${app.contractAddress}/trigger`, {

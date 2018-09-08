@@ -52,15 +52,13 @@ class AddTrigger extends Component {
     } = this.state;
     let defaultInputs = {
       withdrawMethod: '',
-      inputUint: [],
-      inputString: [],
-      outputUint: [],
-      outputString: []
+      inputUints: [],
+      inputStrings: [],
     };
 
     let defaultOutputs = {
-      outputUint: [],
-      outputString: [],
+      outputUints: [],
+      outputStrings: [],
     };
 
     const { inputs, outputs } = parseInputOutputs(defaultInputs, defaultOutputs, selectedTrigger, this.state);
