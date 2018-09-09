@@ -7,7 +7,7 @@ export const prettifyDate = (date) => {
   return hdate.relativeTime(date);
 };
 
-export const etherscanLink = address => `https://kovan.etherscan.io/address/${address}`;
+export const etherscanLink = address => `https://kovan.etherscan.io/${address.length > 42 ? 'tx' : 'address'}/${address}`;
 
 export const parseDoughnutData = (labels = [], data = []) => {
   return {

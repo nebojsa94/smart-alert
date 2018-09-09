@@ -135,7 +135,7 @@ class Home extends React.Component {
                     name="blockNumber"
                     onChange={this.handleInput} value={blockNumber} type="text" />
                 </div>
-                <div className="form-group">
+                <div className="form-group" style={{display: 'none'}}>
                   <select name="" id="">
                     <option value="Kovan">Kovan</option>
                   </select>

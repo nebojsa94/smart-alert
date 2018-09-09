@@ -19,27 +19,35 @@ export const severity = {
 export const triggerTypes = [
   {
     type: 'WITHDRAW_CALLED',
-    name: 'Withdraw function called',
-    description: 'Withdraw function called.',
+    name: 'Specific method called',
+    description: 'Someone has successfully called a specific method (ie. withdraw).',
     danger: 'red',
   },
   {
     type: 'NON_AUTHORIZED_WITHDRAW',
     name: 'Withdrawal from non authorized address',
-    description: 'Withdrawal called from non expected/authorized address',
+    description: 'Withdrawal called from non expected/authorized address.',
     danger: 'red',
+    disabled: true,
   },
   {
     type: 'HIGH_FAILED_TRANSACTIONS',
     name: 'High number of failed transactions on contract',
-    description: 'High number of failed trascation on contract, possibile attack',
+    description: 'High number of failed trascation on contract.',
     danger: 'red',
   },
   {
     type: 'INVALID_CONTRACT_METHOD',
     name: 'Invalid methods being called',
-    description: 'Contract is being called with methods that does not exist',
+    description: 'Transactions calling non-existent methods.',
     danger: 'red'
+  },
+  {
+    type: 'METHODLESS_DEPOSIT',
+    name: 'Deposit without method',
+    description: 'Get notified when contract is topped up directly without method. ',
+    danger: 'red',
+    disabled: true,
   },
   {
     type: 'CONTRACT_CALLING',
@@ -50,32 +58,26 @@ export const triggerTypes = [
   {
     type: 'BLOCK_FILLING',
     name: 'Block filling',
-    description: 'A user executed a large amount of transactions / filling blocks in order to block others.',
+    description: 'Large amount of transactions from a single address filling blocks in order to block others.',
     danger: 'orange',
   },
   {
     type: 'VALIDATE_IPFS',
     name: 'IPFS validation',
-    description: 'When expecting a IPFS hash validates if file exists at location and with expected size',
+    description: 'When expecting a IPFS hash as input, validates if file exists on ipfs.io, and whether it is bigger than 5MB. ',
     danger: 'orange',
   },
   {
     type: 'HIGH_GAS_PRICE',
     name: 'High gas price',
-    description: 'If gas price is 50% higher alert',
+    description: 'Significant number of transactions with gas significantly above average. ',
     danger: 'yellow',
   },
   {
     type: 'INPUT CRITERIA',
     name: 'Input criteria',
-    description: 'Is triggered where the contract input is not in the defined regex form',
+    description: 'Regex check for contract method parameters. ',
     danger: 'yellow',
-  },
-  {
-    type: 'METHODLESS_DEPOSIT',
-    name: 'Deposit without method',
-    description: 'Get notified when contract is topped up directly without method',
-    danger: 'red',
   },
 ];
 

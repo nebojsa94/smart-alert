@@ -90,6 +90,7 @@ class AddTrigger extends Component {
                   <input
                     value={index} type="radio" name="type"
                     onChange={this.handleOptionChange}
+                    disabled={trigger.disabled}
                   />
                   <div className={`trigger-type-wrapper danger-${trigger.danger}`}>
                     <h3 title={trigger.type}>{trigger.name}</h3>
