@@ -2,7 +2,6 @@ package route
 
 import (
 	"errors"
-	"fmt"
 	"github.com/julienschmidt/httprouter"
 	"github.com/nebojsa94/smart-alert/backend/cmd/server/helper"
 	"github.com/nebojsa94/smart-alert/backend/model"
