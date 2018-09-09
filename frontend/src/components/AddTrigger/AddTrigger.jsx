@@ -46,7 +46,7 @@ class AddTrigger extends Component {
     });
   }
 
-  addTrigger() {
+  async addTrigger() {
     const {
       selectedTrigger,
     } = this.state;
@@ -65,7 +65,7 @@ class AddTrigger extends Component {
 
     // Get inputs
     try {
-      this.props.addTrigger(inputs, outputs, triggerTypes[selectedTrigger]);
+      await this.props.addTrigger(inputs, outputs, triggerTypes[selectedTrigger]);
       this.props.fetchTriggers();
       this.props.closeModal();
     } catch (e) {

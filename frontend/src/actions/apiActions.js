@@ -84,7 +84,7 @@ export const triggerTypes = [
 export const triggerTypeMap = Object.values(triggerTypes).reduce((accumulator, trigger) => {
   accumulator[trigger.type] = trigger;
   return accumulator;
-});
+}, {});
 
 export const fetchTriggers = () => async (dispatch, getState) => {
   const {
@@ -148,38 +148,41 @@ export const addTriggerSuccess = (trigger) => ({
   }
 });
 
-export const addTrigger = (inputs, outputs, trigger) => (dispatch, getState) => {
-  const {
-    app,
-  } = getState();
+export const addTrigger = (inputs, outputs, trigger) => (dispatch, getState) =>
+ new Promise((resolve, reject) => {
+   const {
+     app,
+   } = getState();
 
-  let parsedTrigger = {
-    'contractAddress': app.contractAddress,
-    'type': trigger.type,
-    'name': trigger.name,
-    'description': trigger.description,
-    'level': severity[trigger.danger],
-    'method': inputs.method,
-    'inputUints': [...inputs.inputUints],
-    'inputStrings': [...inputs.inputStrings],
-    'outputUints': [...outputs.outputUints],
-    'outputStrings': [...outputs.outputStrings],
-  };
+   let parsedTrigger = {
+     'contractAddress': app.contractAddress,
+     'type': trigger.type,
+     'name': trigger.name,
+     'description': trigger.description,
+     'level': severity[trigger.danger],
+     'method': inputs.method,
+     'inputUints': [...inputs.inputUints],
+     'inputStrings': [...inputs.inputStrings],
+     'outputUints': [...outputs.outputUints],
+     'outputStrings': [...outputs.outputStrings],
+   };
 
-  return fetch(`${testApi}/api/contract/${app.contractAddress}/trigger`, {
-    method: 'POST',
-    headers: {
-      'Accept': 'application/json',
-      'Content-Type': 'application/json'
-    },
-    body: JSON.stringify(parsedTrigger)
-  })
-    .then(res => res.json())
-    .then(response => {
-      console.log(response);
-      dispatch(addTriggerSuccess(parsedTrigger));
-    });
-};
+   return fetch(`${testApi}/api/contract/${app.contractAddress}/trigger`, {
+     method: 'POST',
+     headers: {
+       'Accept': 'application/json',
+       'Content-Type': 'application/json'
+     },
+     body: JSON.stringify(parsedTrigger)
+   })
+     .then(res => res.json())
+     .then(response => {
+       console.log(response);
+       dispatch(addTriggerSuccess(parsedTrigger));
+       resolve();
+     })
+     .catch(reject);
+ });
 
 export const newAlerts = (alerts) => ({
   type: NEW_ALERTS,
@@ -199,7 +202,12 @@ export const pollAlerts = () => (dispatch, getState) => {
       console.log(alerts);
       if (!alerts) return;
       alerts = alerts.map(parseAlert);
+      console.log(alerts);
       dispatch(newAlerts(alerts));
+    })
+    .catch((error) => {
+      console.error('Error polling for alerts');
+      console.error(error);
     });
 };
 
@@ -208,10 +216,11 @@ export const fetchPastAlerts = () => (dispatch, getState) => {
   fetch(testApi + '/api/contract/' + address + '/alerts')
     .then(res => res.json())
     .then(alerts => {
-      if (!alerts) return;
       console.log(alerts);
+      if (!alerts) return;
       alerts = alerts.sort((a, b) => b._created.localeCompare(a._created));
       alerts = alerts.map(parseAlert);
+      console.log(alerts);
       const readAlerts = alerts.filter(alert => alert.originalObject.read);
       const unreadAlerts = alerts.filter(alert => !alert.originalObject.read);
       dispatch(pastAlerts(readAlerts));

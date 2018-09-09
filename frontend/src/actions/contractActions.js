@@ -83,7 +83,7 @@ export const addContract = (name, contractAddress, abi, network, blockNumber) =>
         name,
         abi,
         network,
-        blockNumber,
+        blockNumber: parseInt(blockNumber),
       })
     })
       .then(res => res.json())
