@@ -1,7 +1,6 @@
 import { triggerTypeMap } from '../actions/apiActions';
 import hdate from 'human-date';
 
-
 export const prettifyDate = (date) => {
   if (typeof date === 'string') date = new Date(date);
   return hdate.relativeTime(date);
@@ -29,20 +28,27 @@ export const parseDoughnutData = (labels = [], data = []) => {
 };
 
 export const parseLineData = (title, data = []) => {
+  const labels = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
+  const days = labels.map(item => 0);
+  console.log(data);
+  data.map(item => {
+    let day = new Date(item.date).getDay();
+    days[day]++;
+  });
   return {
-    labels: ['January', 'February', 'March', 'April', 'May', 'June', 'July'],
+    labels,
     datasets: [
       {
         label: title,
         fill: false,
         lineTension: 0.1,
         backgroundColor: 'rgba(75,192,192,0.4)',
-        borderColor: 'rgba(75,192,192,1)',
+        borderColor: '#5D38DB',
         borderCapStyle: 'butt',
         borderDash: [],
         borderDashOffset: 0.0,
         borderJoinStyle: 'miter',
-        pointBorderColor: 'rgba(75,192,192,1)',
+        pointBorderColor: '#5D38DB',
         pointBackgroundColor: '#fff',
         pointBorderWidth: 1,
         pointHoverRadius: 5,
@@ -51,7 +57,7 @@ export const parseLineData = (title, data = []) => {
         pointHoverBorderWidth: 2,
         pointRadius: 1,
         pointHitRadius: 10,
-        data: [...data]
+        data: [...days]
       }
     ]
   };

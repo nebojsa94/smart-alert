@@ -111,10 +111,13 @@ export const fetchStatisticsSuccess = (statistics) => ({
   payload: { statistics }
 });
 
-export const fetchStatistics = () => (dispatch) => {
+export const fetchStatistics = () => (dispatch, getState) => {
+  const {
+    app,
+  } = getState();
 
   const mockData = {
-    transactions: parseLineData('Transactions', [65, 59, 80, 81, 56, 55, 40]),
+    transactions: parseLineData('Transactions', [...app.alerts, ...app.pastAlerts]),
     methods: parseDoughnutData(['Red', 'Blue', 'Yellow'], [30, 50, 100])
   };
 
