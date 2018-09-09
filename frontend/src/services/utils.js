@@ -68,13 +68,13 @@ export const parseInputOutputs = (inputs, outputs, selectedTrigger, state) => {
     case 0:
       inputs.method = state.withdrawMethod;
       break;
-    case 6:
+    case 7:
       inputs.inputStrings.push({
         position: parseInt(state.ipfsHashPosition),
         value: ''
       });
       break;
-    case 8:
+    case 9:
       inputs.method = state.validateMethod;
       inputs.inputStrings.push({
         position: parseInt(state.validatePosition),

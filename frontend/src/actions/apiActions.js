@@ -33,7 +33,7 @@ export const triggerTypes = [
   {
     type: 'HIGH_FAILED_TRANSACTIONS',
     name: 'High number of failed transactions on contract',
-    description: 'High number of failed trascation on contract.',
+    description: 'High number of failed transactions on contract.',
     danger: 'red',
   },
   {
@@ -70,11 +70,11 @@ export const triggerTypes = [
   {
     type: 'HIGH_GAS_PRICE',
     name: 'High gas price',
-    description: 'Significant number of transactions with gas significantly above average. ',
+    description: 'Large number of transactions with gas significantly above average. ',
     danger: 'yellow',
   },
   {
-    type: 'INPUT CRITERIA',
+    type: 'INPUT_CRITERIA',
     name: 'Input criteria',
     description: 'Regex check for contract method parameters. ',
     danger: 'yellow',
@@ -160,10 +160,10 @@ export const addTrigger = (inputs, outputs, trigger) => (dispatch, getState) => 
     'description': trigger.description,
     'level': severity[trigger.danger],
     'method': inputs.method,
-    'inputUints': [...inputs.inputUint],
-    'inputStrings': [...inputs.inputString],
-    'outputUints': [...outputs.outputUint],
-    'outputStrings': [...outputs.outputString],
+    'inputUints': [...inputs.inputUints],
+    'inputStrings': [...inputs.inputStrings],
+    'outputUints': [...outputs.outputUints],
+    'outputStrings': [...outputs.outputStrings],
   };
 
   return fetch(`${testApi}/api/contract/${app.contractAddress}/trigger`, {

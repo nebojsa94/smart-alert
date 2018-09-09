@@ -12,9 +12,9 @@ class Home extends React.Component {
     this.state = {
       contracts: [],
       name: 'DemoContract.sol',
-      address: '0xf0417825227c5bdcb39d2d9f44e069be3d0f69c4',
-      abi: '[{"constant":false,"inputs":[{"name":"_number","type":"uint256"}],"name":"set","outputs":[],"payable":false,"stateMutability":"nonpayable","type":"function"},{"constant":true,"inputs":[],"name":"get","outputs":[{"name":"","type":"uint256"}],"payable":false,"stateMutability":"view","type":"function"}]',
-      blockNumber: '8651544',
+      address: '0xa930a63c9b95e8949d2cab1169ea4e75793c9ca4',
+      abi: '[{"constant":false,"inputs":[],"name":"withdraw","outputs":[],"payable":false,"stateMutability":"nonpayable","type":"function"},{"constant":false,"inputs":[{"name":"_number","type":"uint256"},{"name":"_ipfs","type":"string"}],"name":"set","outputs":[],"payable":false,"stateMutability":"nonpayable","type":"function"},{"constant":true,"inputs":[],"name":"number","outputs":[{"name":"","type":"uint256"}],"payable":false,"stateMutability":"view","type":"function"},{"payable":true,"stateMutability":"payable","type":"fallback"}]',
+      blockNumber: '8662175',
       network: 'kovan',
       shouldRedirect: false,
       error: '',
