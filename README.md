@@ -7,7 +7,7 @@ malicious transactions on your contracts .
 You can test our demo [here](http://46.101.140.249/).
 
 ## Team Members
-The project was developed and created by the following teams.
+The project was developed and created by the following team.
 
 Nebojša Urošević - Solidity / Back-end Developer [Github](https://github.com/nebojsa94)
 
