@@ -6,6 +6,8 @@ malicious transactions on your contracts.
 
 You can test our app [here](http://46.101.140.249/).
 
+You can take a look at the presentation [here](ETHBerlinSmartAlert.pdf).
+
 ## Team Members
 The project was developed and created by the following team.
 
