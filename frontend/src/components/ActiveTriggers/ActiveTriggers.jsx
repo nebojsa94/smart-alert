@@ -27,17 +27,20 @@ class ActiveTriggers extends Component {
             <div>
               <p className="subtitle">We're currently monitoring for these triggers. </p>
               {
-                this.props.activeTriggers.map((trigger) => (
-                  <div key={trigger._id} className={`active-trigger-wrapper danger-${triggerTypeMap[trigger.type].danger}`}>
-                    <h3 title={triggerTypeMap[trigger.type].description}>{triggerTypeMap[trigger.type].name}</h3>
-                    {/*<p>{JSON.stringify(trigger)}</p>*/}
-                    {/*{SHOW TRIGGER PARAMS HERE}*/}
-                    <p>
-                      <a onClick={() => console.log('Edit ' + trigger.id)}>Edit</a>
-                      <a onClick={() => console.log('Remove ' + trigger.id)} className="danger">Remove</a>
-                    </p>
-                  </div>
-                ))
+                this.props.activeTriggers.map((trigger) => {
+                  const triggerInfo = triggerTypeMap[trigger.type] || {};
+                  return (
+                    <div key={trigger._id} className={`active-trigger-wrapper danger-${triggerInfo.danger}`}>
+                      <h3 title={triggerInfo.description}>{triggerInfo.name}</h3>
+                      {/*<p>{JSON.stringify(trigger)}</p>*/}
+                      {/*{SHOW TRIGGER PARAMS HERE}*/}
+                      <p>
+                        <a onClick={() => console.log('Edit ' + trigger.id)}>Edit</a>
+                        <a onClick={() => console.log('Remove ' + trigger.id)} className="danger">Remove</a>
+                      </p>
+                    </div>
+                  )
+                })
               }
             </div>
           }
