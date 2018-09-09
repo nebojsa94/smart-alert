@@ -11,7 +11,7 @@ const (
 	BlockFilling           = "BLOCK_FILLING"
 	ValidateIpfs           = "VALIDATE_IPFS"
 	HighGasPrice           = "HIGH_GAS_PRICE"
-	InputCriteria          = "INPUT CRITERIA"
+	InputCriteria          = "INPUT_CRITERIA"
 )
 
 type Trigger struct {
@@ -28,14 +28,14 @@ type Trigger struct {
 	OutputStrings      []ArgumentsString `json:"outputStrings"`
 }
 
-func NewTrigger(contractAddress, Type, name, description string, level int, Method string, inputUint []ArgumentsUint, inputString []ArgumentsString, outputUint []ArgumentsUint, outputString []ArgumentsString) *Trigger {
+func NewTrigger(contractAddress, Type, name, description string, level int, method string, inputUint []ArgumentsUint, inputString []ArgumentsString, outputUint []ArgumentsUint, outputString []ArgumentsString) *Trigger {
 	return &Trigger{
 		ContractAddress: contractAddress,
 		Type:            Type,
 		Name:            name,
 		Description:     description,
 		Level:           level,
-		Method:          Method,
+		Method:          method,
 		InputUints:      inputUint,
 		InputStrings:    inputString,
 		OutputUints:     outputUint,

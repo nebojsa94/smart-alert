@@ -2,6 +2,7 @@ package route
 
 import (
 	"errors"
+	"fmt"
 	"github.com/julienschmidt/httprouter"
 	"github.com/nebojsa94/smart-alert/backend/cmd/server/helper"
 	"github.com/nebojsa94/smart-alert/backend/model"
@@ -10,9 +11,10 @@ import (
 )
 
 type CreateContractRequest struct {
-	Name    string `json:"name"`
-	Address string `json:"address"`
-	Abi     string `json:"abi"`
+	Name        string `json:"name"`
+	Address     string `json:"address"`
+	Abi         string `json:"abi"`
+	BlockNumber int    `json:"blockNumber"`
 }
 
 func (r CreateContractRequest) Valid() bool {
@@ -32,7 +34,8 @@ func CreateContract(service model.ContractService) httprouter.Handle {
 			return
 		}
 
-		contract := model.NewContract(request.Name, request.Address, request.Abi)
+		fmt.Print(request.BlockNumber)
+		contract := model.NewContract(request.Name, request.Address, request.Abi, request.BlockNumber)
 
 		err := service.Create(contract)
 		if err != nil {

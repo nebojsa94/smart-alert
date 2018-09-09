@@ -32,7 +32,7 @@ func (s *TriggerService) Create(trigger *model.Trigger) error {
 		Name:            trigger.Name,
 		Description:     trigger.Description,
 		Level:           trigger.Level,
-		Method:          trigger.Name,
+		Method:          trigger.Method,
 	}
 
 	err := s.c.Collection("trigger").Save(&triggerMongo)

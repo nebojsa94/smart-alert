@@ -4,11 +4,11 @@ import (
 	"github.com/go-bongo/bongo"
 )
 
-func NewAlert(triggerId, transactionHash string, parameters map[string]string) *Alert {
+func NewAlert(triggerId, transactionHash string, parameters map[string]string, read bool) *Alert {
 	return &Alert{
 		TriggerId:       triggerId,
 		Parameters:      parameters,
-		Read:            false,
+		Read:            read,
 		TransactionHash: transactionHash,
 	}
 }

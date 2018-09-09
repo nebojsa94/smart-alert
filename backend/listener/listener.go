@@ -66,7 +66,7 @@ func (l *Listener) Listen() {
 				fmt.Println("Interrupt signal received, exiting...")
 				os.Exit(0)
 			case blockNum := <-sub:
-				ProcessBlock(l.ContractService, l.TransactionService, l.TriggerService, l.AlertService, client, blockNum)
+				ProcessBlock(l.ContractService, l.TransactionService, l.TriggerService, l.AlertService, client, blockNum, false)
 			}
 		}
 	}()
@@ -85,7 +85,7 @@ func makeContext() context.Context {
 	return ctx
 }
 
-func ProcessBlock(contractService service.ContractService, transactionService service.TransactionService, triggerService service.TriggerService, alertService service.AlertService, client *ethereum.Client, blockNumber int64) {
+func ProcessBlock(contractService service.ContractService, transactionService service.TransactionService, triggerService service.TriggerService, alertService service.AlertService, client *ethereum.Client, blockNumber int64, read bool) {
 	block, err := client.GetBlock(blockNumber)
 	if err != nil {
 		fmt.Println("Block fetching failed")
@@ -94,13 +94,13 @@ func ProcessBlock(contractService service.ContractService, transactionService se
 
 	for _, t := range block.Transactions {
 		if c, err := contractService.Get(t.To); err == nil {
-			ProcessTransaction(transactionService, triggerService, alertService, c, client, t, block)
+			ProcessTransaction(transactionService, triggerService, alertService, c, client, t, block, read)
 		}
 	}
 }
 
-func ProcessTransaction(transactionService service.TransactionService, triggerService service.TriggerService, alertService service.AlertService, contract *model.Contract, client *ethereum.Client, t *ethereum.Transaction, block *ethereum.Block) {
-	fmt.Println("Processing transaction", t.To)
+func ProcessTransaction(transactionService service.TransactionService, triggerService service.TriggerService, alertService service.AlertService, contract *model.Contract, client *ethereum.Client, t *ethereum.Transaction, block *ethereum.Block, read bool) {
+	fmt.Println("Processing transaction", t.Hash, t.BlockNumber)
 	receipt, err := client.GetTransactionReceipt(t.Hash)
 	if err != nil {
 		fmt.Println("Failed getting transaction receipt")
@@ -112,7 +112,12 @@ func ProcessTransaction(transactionService service.TransactionService, triggerSe
 		return
 	}
 
-	transaction := transactionService.ConvertEthereumTransaction(t, contract)
+	transaction, err := transactionService.ConvertEthereumTransaction(t, contract)
+
+	if err != nil {
+		fmt.Println(err)
+		return
+	}
 
 	triggers, _ := triggerService.GetAll(contract.Address)
 
@@ -123,7 +128,7 @@ func ProcessTransaction(transactionService service.TransactionService, triggerSe
 		if _, err := service.MethodById(&abispec, decodeInput[:4]); err != nil {
 			for _, trigger := range *triggers {
 				if trigger.Type == model.InvalidContractMethod {
-					ValidationFailed(alertService, transaction, trigger.Id.Hex(), map[string]string{
+					ValidationFailed(alertService, transaction, read, trigger.Id.Hex(), map[string]string{
 						"alert": "Invalid contract method",
 						"hash":  string(decodeInput[:4]),
 					})
@@ -155,7 +160,7 @@ func ProcessTransaction(transactionService service.TransactionService, triggerSe
 		case model.WithdrawCalled:
 			{
 				if trigger.Method == decodedData.Name && transaction.Ok {
-					ValidationFailed(alertService, transaction, trigger.Id.Hex(), map[string]string{
+					ValidationFailed(alertService, transaction, read, trigger.Id.Hex(), map[string]string{
 						"alert":   "Withdraw Called",
 						"address": transaction.From,
 					})
@@ -165,7 +170,7 @@ func ProcessTransaction(transactionService service.TransactionService, triggerSe
 		case model.NonAuthorizedWithdraw:
 			{
 				if trigger.Method == decodedData.Name && !transaction.Ok {
-					ValidationFailed(alertService, transaction, trigger.Id.Hex(), map[string]string{
+					ValidationFailed(alertService, transaction, read, trigger.Id.Hex(), map[string]string{
 						"alert":   "Unauthorized Withdraw Called",
 						"address": transaction.From,
 					})
@@ -184,7 +189,7 @@ func ProcessTransaction(transactionService service.TransactionService, triggerSe
 				}
 
 				if failed > success {
-					ValidationFailed(alertService, transaction, trigger.Id.Hex(), map[string]string{
+					ValidationFailed(alertService, transaction, read, trigger.Id.Hex(), map[string]string{
 						"alert":   "Detected high number of failed transactions",
 						"failed":  string(failed),
 						"success": string(success),
@@ -204,7 +209,7 @@ func ProcessTransaction(transactionService service.TransactionService, triggerSe
 				for _, state := range trace.States() {
 					if state.Op() == "CALL" {
 						if "0x"+state.Stack()[len(state.Stack())-2][:24] == address {
-							ValidationFailed(alertService, transaction, trigger.Id.Hex(), map[string]string{
+							ValidationFailed(alertService, transaction, read, trigger.Id.Hex(), map[string]string{
 								"alert":   "Contract calling",
 								"address": address,
 							})
@@ -230,7 +235,7 @@ func ProcessTransaction(transactionService service.TransactionService, triggerSe
 				}
 
 				if total > 8 && maxAddress != "" && count[maxAddress]*2 > total {
-					ValidationFailed(alertService, transaction, trigger.Id.Hex(), map[string]string{
+					ValidationFailed(alertService, transaction, read, trigger.Id.Hex(), map[string]string{
 						"alert":   "Block filling",
 						"address": maxAddress,
 						"count":   string(count[maxAddress]),
@@ -240,9 +245,9 @@ func ProcessTransaction(transactionService service.TransactionService, triggerSe
 			}
 		case model.ValidateIpfs:
 			{
-				resp, err := http.Get("https://ipfs.decenter.com/api/v0/object/stat?arg=" + decodedData.Inputs[trigger.InputStrings[0].Position-1].Value.(string))
+				resp, err := http.Get("https://ipfs.decenter.com/api/v0/object/stat?arg=" + decodedData.Inputs[trigger.InputStrings[0].Position].Value.(string))
 				if err != nil {
-					ValidationFailed(alertService, transaction, model.ValidateIpfs, map[string]string{
+					ValidationFailed(alertService, transaction, read, trigger.Id.Hex(), map[string]string{
 						"alert": err.Error(),
 					})
 				}
@@ -251,7 +256,7 @@ func ProcessTransaction(transactionService service.TransactionService, triggerSe
 				json.NewDecoder(resp.Body).Decode(&ipfsResponse)
 
 				if ipfsResponse.CumulativeSize > 1000 {
-					ValidationFailed(alertService, transaction, trigger.Id.Hex(), map[string]string{
+					ValidationFailed(alertService, transaction, read, trigger.Id.Hex(), map[string]string{
 						"alert": "File too big",
 						"size":  string(ipfsResponse.CumulativeSize),
 					})
@@ -272,7 +277,7 @@ func ProcessTransaction(transactionService service.TransactionService, triggerSe
 				}
 
 				if total > 8 && count*2 > total {
-					ValidationFailed(alertService, transaction, trigger.Id.Hex(), map[string]string{
+					ValidationFailed(alertService, transaction, read, trigger.Id.Hex(), map[string]string{
 						"alert": "High gas prices",
 						"count": string(count),
 						"total": string(total),
@@ -282,8 +287,8 @@ func ProcessTransaction(transactionService service.TransactionService, triggerSe
 		case model.InputCriteria:
 			{
 				for _, input := range trigger.InputStrings {
-					if matched, _ := regexp.Match(input.Value, []byte(decodedData.Inputs[input.Position-1].Value.(string))); matched {
-						ValidationFailed(alertService, transaction, trigger.Id.Hex(), map[string]string{
+					if matched, _ := regexp.Match(input.Value, []byte(decodedData.Inputs[input.Position].Value.(string))); !matched {
+						ValidationFailed(alertService, transaction, read, trigger.Id.Hex(), map[string]string{
 							"alert":    "Input criteria matched",
 							"method":   trigger.Method,
 							"position": string(input.Position),
@@ -297,8 +302,8 @@ func ProcessTransaction(transactionService service.TransactionService, triggerSe
 	}
 }
 
-func ValidationFailed(service service.AlertService, transaction *model.Transaction, triggerId string, parameters map[string]string) {
-	alert := model.NewAlert(triggerId, transaction.Hash, parameters)
+func ValidationFailed(service service.AlertService, transaction *model.Transaction, read bool, triggerId string, parameters map[string]string) {
+	alert := model.NewAlert(triggerId, transaction.Hash, parameters, read)
 	service.Create(alert)
 }
 
