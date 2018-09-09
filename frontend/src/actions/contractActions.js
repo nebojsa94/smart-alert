@@ -69,7 +69,7 @@ const addContractToLS = (name, address, abi, id) => {
   localStorage.setItem('contracts', JSON.stringify(contracts));
 };
 
-export const addContract = (name, contractAddress, abi, network) => (dispatch, getState) =>
+export const addContract = (name, contractAddress, abi, network, blockNumber) => (dispatch, getState) =>
   new Promise((resolve, reject) => {
     dispatch(addContractRequest());
     fetch(testApi + '/api/contract', {
@@ -83,6 +83,7 @@ export const addContract = (name, contractAddress, abi, network) => (dispatch, g
         name,
         abi,
         network,
+        blockNumber: parseInt(blockNumber),
       })
     })
       .then(res => res.json())

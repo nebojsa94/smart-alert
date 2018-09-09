@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
-import { addTrigger, triggerTypes } from '../../actions/apiActions';
+import { addTrigger, triggerTypes, fetchTriggers } from '../../actions/apiActions';
 import './AddTrigger.scss';
 import { listFunctions, parseInputOutputs } from '../../services/utils';
 
@@ -14,7 +14,7 @@ class AddTrigger extends Component {
       withdrawMethod: '',
       ipfsHashPosition: null,
       validateMethod: '',
-      validatePosition: null,
+      validatePosition: 0,
       validateRegExp: null,
     };
 
@@ -46,7 +46,7 @@ class AddTrigger extends Component {
     });
   }
 
-  addTrigger() {
+  async addTrigger() {
     const {
       selectedTrigger,
     } = this.state;
@@ -64,10 +64,13 @@ class AddTrigger extends Component {
     const { inputs, outputs } = parseInputOutputs(defaultInputs, defaultOutputs, selectedTrigger, this.state);
 
     // Get inputs
+    try {
+      await this.props.addTrigger(inputs, outputs, triggerTypes[selectedTrigger]);
+      this.props.fetchTriggers();
+      this.props.closeModal();
+    } catch (e) {
 
-    console.log(triggerTypes, selectedTrigger, triggerTypes[selectedTrigger]);
-    this.props.addTrigger(inputs, outputs, triggerTypes[selectedTrigger]);
-    this.props.closeModal();
+    }
   }
 
   render() {
@@ -75,7 +78,7 @@ class AddTrigger extends Component {
       selectedTrigger,
     } = this.state;
 
-    const customTriggers = [0, 6, 8];
+    const customTriggers = [0, 7, 9];
 
     return (
       <div className="modal add-trigger-modal" onClick={this.props.closeModal}>
@@ -90,6 +93,7 @@ class AddTrigger extends Component {
                   <input
                     value={index} type="radio" name="type"
                     onChange={this.handleOptionChange}
+                    disabled={trigger.disabled}
                   />
                   <div className={`trigger-type-wrapper danger-${trigger.danger}`}>
                     <h3 title={trigger.type}>{trigger.name}</h3>
@@ -121,7 +125,7 @@ class AddTrigger extends Component {
 
               }
               {
-                selectedTrigger === 6 && // IPFS Validation
+                selectedTrigger === 7 && // IPFS Validation
                 <div>
                   <div className="label-wrapper">
                     <label htmlFor="validateMethod">
@@ -156,7 +160,7 @@ class AddTrigger extends Component {
                 </div>
               }
               {
-                selectedTrigger === 8 && // Input criteria
+                selectedTrigger === 9 && // Input criteria
                 <div>
                   <div className="label-wrapper">
                     <label htmlFor="validateMethod">
@@ -241,6 +245,7 @@ const mapStateToProps = (state) => ({
 });
 const mapDispatchToProps = (dispatch) => bindActionCreators({
   addTrigger,
+  fetchTriggers,
 }, dispatch);
 
 export default connect(

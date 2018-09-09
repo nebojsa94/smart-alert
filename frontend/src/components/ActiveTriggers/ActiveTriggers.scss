@@ -29,8 +29,11 @@
 
   a {
     cursor: pointer;
-    text-decoration: underline;
     margin-right: 10px;
+    font-weight: bold;
+    &.danger {
+      color: $warning-red
+    }
   }
 
   &.danger-red {

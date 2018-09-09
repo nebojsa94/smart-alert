@@ -12,8 +12,9 @@ class Home extends React.Component {
     this.state = {
       contracts: [],
       name: 'DemoContract.sol',
-      address: '0xf0417825227c5bdcb39d2d9f44e069be3d0f69c4',
-      abi: '[{"constant":false,"inputs":[{"name":"_number","type":"uint256"}],"name":"set","outputs":[],"payable":false,"stateMutability":"nonpayable","type":"function"},{"constant":true,"inputs":[],"name":"get","outputs":[{"name":"","type":"uint256"}],"payable":false,"stateMutability":"view","type":"function"}]',
+      address: '0xd9ef9fbee88b3a865e2591457e4b39d25551cd25',
+      abi: '[{“constant”:false,“inputs”:[],“name”:“withdraw”,“outputs”:[],“payable”:false,“stateMutability”:“nonpayable”,“type”:“function”},{“constant”:true,“inputs”:[],“name”:“str”,“outputs”:[{“name”:“”,“type”:“string”}],“payable”:false,“stateMutability”:“view”,“type”:“function”},{“constant”:false,“inputs”:[{“name”:“_str”,“type”:“string”},{“name”:“_ipfs”,“type”:“string”}],“name”:“set”,“outputs”:[],“payable”:false,“stateMutability”:“nonpayable”,“type”:“function”}]',
+      blockNumber: '8662618',
       network: 'kovan',
       shouldRedirect: false,
       error: '',
@@ -40,22 +41,23 @@ class Home extends React.Component {
 
   async handleFormSubmit(e) {
     e.preventDefault();
-    this.setState({ error: '' })
+    this.setState({ error: '' });
     const {
       address,
       abi,
       network,
       name,
+      blockNumber,
     } = this.state;
     // Add name to form?
     try {
-      await this.props.addContract(name, address, abi, network);
+      await this.props.addContract(name, address, abi, network, blockNumber);
       this.setState({
         shouldRedirect: true,
-      })
+      });
     } catch (error) {
       console.log(error);
-      this.setState({ error })
+      this.setState({ error });
     }
   }
 
@@ -65,6 +67,7 @@ class Home extends React.Component {
       address,
       name,
       abi,
+      blockNumber,
       shouldRedirect,
     } = this.state;
 
@@ -92,17 +95,18 @@ class Home extends React.Component {
                     <div key={contract.id} className="contract">
                       <a
                         className="recent-ct"
-                        onClick={() =>{
+                        onClick={() => {
                           this.setState({
                             address: contract.address,
                             shouldRedirect: true,
-                          })
+                          });
                         }}>{contract.name} - {contract.address}</a>
                     </div>
                   ))
                 }
 
-                <button className="button light full-width" onClick={() => this.setState({ showForm: true })}>
+                <button className="button light full-width"
+                        onClick={() => this.setState({ showForm: true })}>
                   Add new contract
                 </button>
               </div>,
@@ -126,15 +130,22 @@ class Home extends React.Component {
                   <textarea placeholder="ABI" name="abi" onChange={this.handleInput} value={abi} />
                 </div>
                 <div className="form-group">
+                  <input
+                    placeholder="Contract creation block number"
+                    name="blockNumber"
+                    onChange={this.handleInput} value={blockNumber} type="text" />
+                </div>
+                <div className="form-group" style={{display: 'none'}}>
                   <select name="" id="">
                     <option value="Kovan">Kovan</option>
                   </select>
                 </div>
                 <div className="button-wrapper">
-                  { this.state.error }
+                  {this.state.error}
                   {
                     contracts.length > 0 &&
-                    <button className="button light" onClick={() => this.setState({ showForm: false })}>
+                    <button className="button light"
+                            onClick={() => this.setState({ showForm: false })}>
                       Cancel
                     </button>
                   }
@@ -151,8 +162,7 @@ class Home extends React.Component {
   }
 }
 
-const mapStateToProps = state => ({
-});
+const mapStateToProps = state => ({});
 
 const mapDispatchToProps = {
   addContract,

@@ -27,12 +27,11 @@ class Dashboard extends Component {
             statistics &&
             <div className="grid">
               <div className="grid-column">
-                <h1>Transaction calls</h1>
-                <Doughnut data={statistics.methods} />
+                <h1>Alerts per day</h1>
+                <Line data={statistics.transactions} />
               </div>
               <div className="grid-column">
-                <h1>Transaction calls</h1>
-                <Line data={statistics.transactions} />
+                {/*<h1>Transaction calls</h1>*/}
               </div>
             </div>
           }
