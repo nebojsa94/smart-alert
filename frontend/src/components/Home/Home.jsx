@@ -13,7 +13,7 @@ class Home extends React.Component {
       contracts: [],
       name: 'DemoContract.sol',
       address: '0xd9ef9fbee88b3a865e2591457e4b39d25551cd25',
-      abi: '[{“constant”:false,“inputs”:[],“name”:“withdraw”,“outputs”:[],“payable”:false,“stateMutability”:“nonpayable”,“type”:“function”},{“constant”:true,“inputs”:[],“name”:“str”,“outputs”:[{“name”:“”,“type”:“string”}],“payable”:false,“stateMutability”:“view”,“type”:“function”},{“constant”:false,“inputs”:[{“name”:“_str”,“type”:“string”},{“name”:“_ipfs”,“type”:“string”}],“name”:“set”,“outputs”:[],“payable”:false,“stateMutability”:“nonpayable”,“type”:“function”}]',
+      abi: '[{"constant":false,"inputs":[],"name":"withdraw","outputs":[],"payable":false,"stateMutability":"nonpayable","type":"function"},{"constant":true,"inputs":[],"name":"str","outputs":[{"name":"","type":"string"}],"payable":false,"stateMutability":"view","type":"function"},{"constant":false,"inputs":[{"name":"_str","type":"string"},{"name":"_ipfs","type":"string"}],"name":"set","outputs":[],"payable":false,"stateMutability":"nonpayable","type":"function"}]',
       blockNumber: '8662618',
       network: 'kovan',
       shouldRedirect: false,
