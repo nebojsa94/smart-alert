@@ -93,11 +93,12 @@ func (s *TransactionService) GetAll(contractAddress string) *[]model.Transaction
 	return &transactions
 }
 
-func (s *TransactionService) ConvertEthereumTransaction(transaction *ethereum.Transaction, contract *model.Contract) *model.Transaction {
+func (s *TransactionService) ConvertEthereumTransaction(transaction *ethereum.Transaction, contract *model.Contract) (*model.Transaction, error) {
 	decodeInput, _ := hex.DecodeString(transaction.Input[2:])
 	decodedData, err := ParseCallData(decodeInput, contract.Abi)
 	if err != nil {
 		fmt.Print("Unable to decode data")
+		return nil, err
 	}
 
 	var transactionsUint []model.ArgumentsUint
@@ -119,7 +120,7 @@ func (s *TransactionService) ConvertEthereumTransaction(transaction *ethereum.Tr
 		}
 	}
 
-	return model.NewTransaction(transaction.Hash, contract.Address, transaction.To, transaction.From, transaction.Value, transactionsUint, transactionsString)
+	return model.NewTransaction(transaction.Hash, contract.Address, transaction.To, transaction.From, transaction.Value, transactionsUint, transactionsString), nil
 }
 
 func (s *TransactionService) Process(transaction *model.Transaction, contract *model.Contract, ok bool) error {

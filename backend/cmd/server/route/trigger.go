@@ -133,6 +133,6 @@ func processPreviousBlocks(contractService service.ContractService, transactionS
 	currentBlockNumber, err := client.CurrentBlockNumber()
 
 	for i := blockNumber; i < currentBlockNumber; i++ {
-		listener.ProcessBlock(contractService, transactionService, triggerService, alertService, client, i)
+		listener.ProcessBlock(contractService, transactionService, triggerService, alertService, client, i, false)
 	}
 }

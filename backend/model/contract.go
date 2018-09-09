@@ -12,11 +12,12 @@ type Contract struct {
 	BlockNumber        int    `json:"blockNumber"`
 }
 
-func NewContract(name, address, abi string) *Contract {
+func NewContract(name, address, abi string, blockNumber int) *Contract {
 	return &Contract{
-		Name:    name,
-		Address: address,
-		Abi:     abi,
+		Name:        name,
+		Address:     address,
+		Abi:         abi,
+		BlockNumber: blockNumber,
 	}
 }
 
