@@ -34,7 +34,6 @@ func CreateContract(service model.ContractService) httprouter.Handle {
 			return
 		}
 
-		fmt.Print(request.BlockNumber)
 		contract := model.NewContract(request.Name, request.Address, request.Abi, request.BlockNumber)
 
 		err := service.Create(contract)
