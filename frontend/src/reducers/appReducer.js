@@ -82,8 +82,8 @@ export default (state = INITIAL_STATE, action) => {
       return {
         ...state,
         alerts: [
-          ...state.alerts,
           ...payload.alerts,
+          ...state.alerts,
         ],
       };
     }

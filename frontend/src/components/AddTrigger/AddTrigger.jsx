@@ -133,7 +133,7 @@ class AddTrigger extends Component {
                     </label>
                     <select name="validateMethod" onChange={this.handleInput} id="validateMethod">
                       {
-                        listFunctions(this.props.contractAbi, true).map(method => (
+                        listFunctions(this.props.contractAbi).map(method => (
                           <option key={method.name} value={method.name}>{method.name}</option>
                         ))
                       }
@@ -146,9 +146,9 @@ class AddTrigger extends Component {
                     <select name="ipfsHashPosition" onChange={this.handleInput} id="ipfsHashPosition">
                       {
                         this.state.validateMethod &&
-                        listFunctions(this.props.contractAbi, true)
+                        listFunctions(this.props.contractAbi)
                           .filter(method => method.name === this.state.validateMethod).length &&
-                        listFunctions(this.props.contractAbi, true)
+                        listFunctions(this.props.contractAbi)
                           .filter(method => method.name === this.state.validateMethod)[0]
                           .inputs
                           .map((inputs, i) => (
