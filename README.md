@@ -1,3 +1,7 @@
+# [DEPRECATED] Active at https://github.com/Tenderly
+
+This repository has been deprecated and has been incorporated into the [Tenderly](https://tenderly.dev) platform. Feel free to check it out and setup alerting for your Smart Contracts.
+
 # SmartAlert
 
 SmartAlert is a smart contract security monitor. It enables you to 
